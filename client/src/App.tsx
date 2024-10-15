@@ -1,5 +1,10 @@
+import AppRoutes from "./AppRoutes";
 function App() {
-  return <h1 className="text-3xl font-bold underline bg-red-800">Share Exp</h1>;
+  return (
+    <>
+    <AppRoutes />
+    </>
+  );
 }
 
 export default App;
