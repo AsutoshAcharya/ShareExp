@@ -20,6 +20,7 @@ const AppRoutes = () => {
           {allRoutes["public"].map(GetRoute)}
           {/* {allRoutes["independent"].map(GetRoute)} */}
           <Route path="*" element={<Navigate to="/" replace />} />
+          
         </Routes>
       </Suspense>
     </Router>

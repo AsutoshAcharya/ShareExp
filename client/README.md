@@ -1,3 +1,4 @@
 /* Branch - Gudu*/
 ## Added framer motion
-## Login Page - 
+## Login Page added (UI only) - 16 october
+## Will add Register page tomo
