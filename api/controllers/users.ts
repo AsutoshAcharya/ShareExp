@@ -11,9 +11,10 @@ interface SignUpBody {
   year_of_experience?: string;
   role?: string;
   company?: string;
-  skills?: string;
+  skills?: Array<string>;
   profile_picture?: string;
   about?: string;
+  socials?: Array<string>;
 }
 export const signUp: RequestHandler<
   unknown,
@@ -32,6 +33,7 @@ export const signUp: RequestHandler<
     skills,
     profile_picture,
     about,
+    socials,
   } = req.body;
 
   try {

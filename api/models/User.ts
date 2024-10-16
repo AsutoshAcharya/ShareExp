@@ -12,6 +12,7 @@ const userSchema = new Schema({
   skills: { type: [String] },
   profile_picture: { type: String },
   about: { type: String },
+  socials: { type: [String] },
 });
 
 type User = InferSchemaType<typeof userSchema>;
