@@ -28,12 +28,12 @@ mongoose.connection.on("disconnected", () => {
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
-// app.get("/protected", authenticateToken, (req, res) => {
-//   res.json({
-//     message: "You have accessed a protected route!",
-//     user: req.body?.userId,
-//   });
-// });
+app.get("/protected", authenticateToken, (req, res) => {
+  res.status(200).json({
+    message: "You have accessed a protected route!",
+    user: req.body?.userId,
+  });
+});
 app.use((req: Request, res: Response, next: NextFunction) => {
   next(Error("Endpoint not found"));
 });

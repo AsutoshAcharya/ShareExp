@@ -17,7 +17,7 @@ export const authenticateToken = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers["authorization"]?.split(" ")[1]; // Bearer token
+  const token = req.headers["x-access-token"] as string;
   console.log(token);
   if (!token) {
     return next(createHttpError(401, "Access token required"));
@@ -28,7 +28,6 @@ export const authenticateToken = (
     if (err) {
       return next(createHttpError(403, "Invalid token"));
     }
-    console.warn(userId);
 
     req.body.userId = userId;
     next();
