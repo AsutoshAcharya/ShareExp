@@ -2,6 +2,8 @@ import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import UserModel from "../models/User";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import pick from "../utils/pick";
 interface SignUpBody {
   user_name?: string;
   email?: string;
@@ -83,6 +85,35 @@ export const signUp: RequestHandler<
       about,
     });
     res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
+export const logIn: RequestHandler<
+  unknown,
+  unknown,
+  Pick<SignUpBody, "email" | "password">,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) throw createHttpError(400, "No input given");
+    const user = await UserModel.findOne({ email }).select("+email +password");
+    if (!user) {
+      throw createHttpError(404, "User is not registered");
+    }
+    console.log(user);
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) throw createHttpError(401, "Invalid password");
+
+    const token = jwt.sign({ userId: user._id }, process.env.jwt!, {
+      expiresIn: "1h",
+    });
+    const { password: pw, ...userData } = user.toObject();
+    res.status(200).json({
+      token,
+      user: userData,
+    });
   } catch (error) {
     next(error);
   }
