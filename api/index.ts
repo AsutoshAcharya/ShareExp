@@ -3,7 +3,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import { errorHandler } from "./middlewares";
+import { authenticateToken, errorHandler } from "./middlewares";
 import userRoutes from "./routes/users";
 mongoose.set("strictQuery", true);
 dotenv.config();
@@ -28,7 +28,12 @@ mongoose.connection.on("disconnected", () => {
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
-
+// app.get("/protected", authenticateToken, (req, res) => {
+//   res.json({
+//     message: "You have accessed a protected route!",
+//     user: req.body?.userId,
+//   });
+// });
 app.use((req: Request, res: Response, next: NextFunction) => {
   next(Error("Endpoint not found"));
 });

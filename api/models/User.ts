@@ -15,6 +15,6 @@ const userSchema = new Schema({
   socials: { type: [String] },
 });
 
-type User = InferSchemaType<typeof userSchema>;
+export type User = InferSchemaType<typeof userSchema>;
 
 export default model<User>("User", userSchema);
