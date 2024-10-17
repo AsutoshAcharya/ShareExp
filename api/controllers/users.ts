@@ -102,7 +102,7 @@ export const logIn: RequestHandler<
     if (!user) {
       throw createHttpError(404, "User is not registered");
     }
-    console.log(user);
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw createHttpError(401, "Invalid password");
 

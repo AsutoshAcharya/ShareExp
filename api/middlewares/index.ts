@@ -25,11 +25,11 @@ export const authenticateToken = (
 ) => {
   const token = req.headers["x-access-token"] as string;
   if (!token) {
-    return next(createHttpError(401, "Access token required"));
+    throw createHttpError(401, "Access token required");
   }
   jwt.verify(token, process.env.jwt!, (err, user) => {
     if (err) {
-      return next(createHttpError(403, "Invalid token"));
+      throw createHttpError(403, "Invalid token");
     }
     req.user = user;
     next();
@@ -44,7 +44,9 @@ export const verifyUser = (
   authenticateToken(req, res, () => {
     const { userId, role } = Some.Object(req?.user);
     // console.log(req?.user, req?.body?.post_owner);
-    if (Some.String(userId) === Some.String(req?.body?.post_owner)) {
+    const accessUser = req.headers["x-access-user"] as string;
+    if (!accessUser) throw createHttpError(404, "User not found");
+    if (Some.String(userId) === Some.String(accessUser)) {
       return next();
     }
     throw createHttpError(404, "You are not authorized to edit this post");

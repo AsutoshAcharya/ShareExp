@@ -75,3 +75,19 @@ export const deletePost: RequestHandler<
     next(error);
   }
 };
+
+export const getPostsByUserId: RequestHandler<
+  any,
+  unknown,
+  unknown,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { userId } = req?.params || {};
+    if (!userId) throw createHttpError(404, "User not found,please register");
+    const allUserSpecificPosts = await PostSchema.find({ posted_by: userId });
+    res.status(200).json(allUserSpecificPosts);
+  } catch (error) {
+    next(error);
+  }
+};
