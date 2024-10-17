@@ -6,4 +6,10 @@ const router = Router();
 
 router.post("/create-post", authenticateToken, PostController.createPost);
 router.post("/edit-post/:postId", verifyUser, PostController.editPost);
+router.delete("/delete-post/:postId", verifyUser, PostController.deletePost);
+router.get(
+  "/get-user-post/:userId",
+  verifyUser,
+  PostController.getPostsByUserId
+);
 export default router;

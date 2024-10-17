@@ -102,7 +102,7 @@ export const logIn: RequestHandler<
     if (!user) {
       throw createHttpError(404, "User is not registered");
     }
-    console.log(user);
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw createHttpError(401, "Invalid password");
 
@@ -118,6 +118,24 @@ export const logIn: RequestHandler<
       token,
       user: userData,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getUserInfo: RequestHandler<
+  any,
+  unknown,
+  unknown,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { userId } = req?.params || {};
+    if (!userId) throw createHttpError(404, "User not found");
+    const accessUser = req.headers["x-access-user"] as string;
+    const user = await UserModel.findById({ _id: userId }).select(
+      accessUser === userId ? "+email" : ""
+    );
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
