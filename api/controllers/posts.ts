@@ -57,3 +57,21 @@ export const editPost: RequestHandler<any, unknown, EditPost, unknown> = async (
     next(error);
   }
 };
+
+export const deletePost: RequestHandler<
+  any,
+  unknown,
+  EditPost,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { postId } = req?.params || {};
+    if (!postId) throw createHttpError(400, "Bad Request,No postId");
+    const post = await PostSchema.findById({ _id: postId });
+    if (!post) throw createHttpError(404, "Post not found");
+    await PostSchema.deleteOne({ _id: postId });
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
