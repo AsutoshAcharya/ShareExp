@@ -10,7 +10,7 @@ class RoutesMap {
   // Public Routes
   static LOGIN: AppRoute = {
     title: "Login",
-    path: "login",
+    path: "login-or-register",
     subRoutes: {},
     Element: Login,
     kind: "public",

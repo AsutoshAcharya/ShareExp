@@ -12,7 +12,19 @@ const userSchema = new Schema({
   skills: { type: [String] },
   profile_picture: { type: String },
   about: { type: String },
-  socials: { type: [String] },
+  socials: [
+    {
+      type: {
+        type: String,
+        enum: ["LinkedIn", "Twitter", "Portfolio", "GitHub"],
+        required: true,
+      },
+      link: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 export type User = InferSchemaType<typeof userSchema>;

@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import UserModel from "../models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import pick from "../utils/pick";
+
 interface SignUpBody {
   user_name?: string;
   email?: string;
@@ -106,9 +106,13 @@ export const logIn: RequestHandler<
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) throw createHttpError(401, "Invalid password");
 
-    const token = jwt.sign({ userId: user._id }, process.env.jwt!, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.jwt!,
+      {
+        expiresIn: "1h",
+      }
+    );
     const { password: pw, ...userData } = user.toObject();
     res.status(200).json({
       token,
