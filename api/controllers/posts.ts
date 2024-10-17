@@ -6,6 +6,9 @@ import mongoose from "mongoose";
 interface EditPost extends Post {
   edited_by: string;
 }
+interface PostParams {
+  postId: string;
+}
 export const createPost: RequestHandler<
   unknown,
   unknown,
@@ -34,14 +37,22 @@ export const createPost: RequestHandler<
   }
 };
 
-export const editPost: RequestHandler<
-  unknown,
-  unknown,
-  EditPost,
-  unknown
-> = async (req, res, next) => {
+export const editPost: RequestHandler<any, unknown, EditPost, unknown> = async (
+  req,
+  res,
+  next
+) => {
   try {
-    res.status(200).json({ message: "You can now edit" });
+    const { postId } = req?.params || {};
+    const { title, body, image } = req.body;
+    if (!postId || !title || !body) throw createHttpError(400, "Bad Request");
+    const post = await PostSchema.findById({ _id: postId });
+    if (!post) throw createHttpError(404, "Post not found");
+    await PostSchema.updateOne(
+      { _id: postId },
+      { $set: { title, body, image } }
+    );
+    res.status(200).json({ message: "Post updated successfully" });
   } catch (error) {
     next(error);
   }

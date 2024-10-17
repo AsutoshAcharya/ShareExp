@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../types";
+import { Some } from "../utils/Some";
 
 export interface CustomRequest extends Request {
   user?: any;
@@ -23,7 +24,6 @@ export const authenticateToken = (
   next: NextFunction
 ) => {
   const token = req.headers["x-access-token"] as string;
-  console.log(token);
   if (!token) {
     return next(createHttpError(401, "Access token required"));
   }
@@ -43,10 +43,12 @@ export const verifyUser = (
   res: Response,
   next: NextFunction
 ) => {
-  authenticateToken(req, res, next);
-  const { userId, role } = req?.user;
-  if (userId !== req?.body?.edited_by) {
+  authenticateToken(req, res, () => {
+    const { userId, role } = Some.Object(req?.user);
+    console.log(req?.user, req?.body?.edited_by);
+    if (Some.String(userId) === Some.String(req?.body?.edited_by)) {
+      return next();
+    }
     throw createHttpError(404, "You are not authorized to edit this post");
-  }
-  next();
+  });
 };

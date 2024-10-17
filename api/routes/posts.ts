@@ -5,5 +5,5 @@ import { authenticateToken, verifyUser } from "../middlewares";
 const router = Router();
 
 router.post("/create-post", authenticateToken, PostController.createPost);
-router.post("/edit-post", verifyUser, PostController.editPost);
+router.post("/edit-post/:postId", verifyUser, PostController.editPost);
 export default router;

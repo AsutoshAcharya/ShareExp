@@ -37,12 +37,12 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 
-app.get("/protected", authenticateToken, (req: CustomRequest, res) => {
-  res.status(200).json({
-    message: "You have accessed a protected route!",
-    user: req?.user,
-  });
-});
+// app.get("/protected", authenticateToken, (req: CustomRequest, res) => {
+//   res.status(200).json({
+//     message: "You have accessed a protected route!",
+//     user: req?.user,
+//   });
+// });
 app.use((req: Request, res: Response, next: NextFunction) => {
   next(Error("Endpoint not found"));
 });
