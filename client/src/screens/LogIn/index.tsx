@@ -36,7 +36,7 @@ const Login = () => {
         >
           {register ? (
             <>
-            <Register />
+            <Register setRegister={setRegister}/>
             </>
           ) : (
             <div>
