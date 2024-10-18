@@ -1,8 +1,9 @@
-import { RequestHandler } from "express";
+import { NextFunction, RequestHandler } from "express";
 import createHttpError from "http-errors";
 import UserModel from "../models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Some } from "../utils/Some";
 
 interface SignUpBody {
   user_name?: string;
@@ -16,29 +17,27 @@ interface SignUpBody {
   skills?: Array<string>;
   profile_picture?: string;
   about?: string;
-  socials?: Array<string>;
+  socials?: Array<{
+    type: string;
+    link: string;
+  }>;
 }
-export const signUp: RequestHandler<
-  unknown,
-  unknown,
-  SignUpBody,
-  unknown
-> = async (req, res, next) => {
-  const {
-    user_name,
-    email,
-    password: passwordRaw,
-    phone,
-    country,
-    year_of_experience,
-    company,
-    skills,
-    profile_picture,
-    about,
-    socials,
-  } = req.body;
 
+async function findErrorInUserBody(
+  user: SignUpBody,
+  callback: (passwordRaw?: string) => Promise<void>,
+  next: NextFunction
+) {
   try {
+    const {
+      user_name,
+      email,
+      password: passwordRaw,
+      phone,
+      country,
+      year_of_experience,
+    } = user;
+
     if (
       !user_name ||
       !phone ||
@@ -49,33 +48,48 @@ export const signUp: RequestHandler<
     ) {
       throw createHttpError(400, "Parameters missing");
     }
-    let errorkeys: string[] = [];
+
+    let errorKeys: string[] = [];
     const fieldsToCheck = { user_name, email, phone };
+
     for (const key of Object.keys(fieldsToCheck)) {
       const value = fieldsToCheck[key as keyof typeof fieldsToCheck];
       if (value) {
         const existingUserData = await UserModel.findOne({
           [key]: value,
         }).exec();
+
         if (existingUserData) {
-          errorkeys.push(key);
+          errorKeys.push(key);
         }
       }
     }
-    if (errorkeys.length > 0) {
+
+    if (errorKeys.length > 0) {
       throw createHttpError(
         409,
-        `${errorkeys.join(", ")} ${
-          errorkeys.length > 1 ? "are" : "is"
+        `${errorKeys.join(", ")} ${
+          errorKeys.length > 1 ? "are" : "is"
         } already taken, please choose a different one`
       );
     }
-    const passwordHash = await bcrypt.hash(passwordRaw, 10);
+    await callback(passwordRaw);
+  } catch (error) {
+    next(error);
+  }
+}
 
-    const newUser = await UserModel.create({
+export const signUp: RequestHandler<
+  unknown,
+  unknown,
+  SignUpBody,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const {
       user_name,
       email,
-      password: passwordHash,
+      password: passwordRaw,
       phone,
       country,
       year_of_experience,
@@ -83,8 +97,29 @@ export const signUp: RequestHandler<
       skills,
       profile_picture,
       about,
-    });
-    res.status(201).json(newUser);
+      socials,
+    } = req.body;
+    findErrorInUserBody(
+      req?.body,
+      async (passwordRaw = "") => {
+        const passwordHash = await bcrypt.hash(passwordRaw, 10);
+        const newUser = await UserModel.create({
+          user_name,
+          email,
+          password: passwordHash,
+          phone,
+          country,
+          year_of_experience,
+          company,
+          skills,
+          profile_picture,
+          about,
+          socials,
+        });
+        res.status(201).json(newUser);
+      },
+      next
+    );
   } catch (error) {
     next(error);
   }
@@ -136,6 +171,56 @@ export const getUserInfo: RequestHandler<
       accessUser === userId ? "+email" : ""
     );
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editUser: RequestHandler<any, unknown, SignUpBody, unknown> = (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { userId } = Some.Object(req?.params || {});
+    if (!userId) throw createHttpError(400, "Parameter missing");
+    findErrorInUserBody(
+      req?.body,
+      async (passwordRaw = "") => {
+        const {
+          user_name,
+          email,
+          phone,
+          country,
+          year_of_experience,
+          company,
+          skills,
+          profile_picture,
+          about,
+          socials,
+        } = req.body;
+
+        const updatedUser = await UserModel.updateOne(
+          { _id: userId },
+          {
+            $set: {
+              user_name,
+              email,
+              phone,
+              country,
+              year_of_experience,
+              company,
+              skills,
+              profile_picture,
+              about,
+              socials,
+            },
+          }
+        );
+        res.status(200).json(updatedUser);
+      },
+      next
+    );
   } catch (error) {
     next(error);
   }
