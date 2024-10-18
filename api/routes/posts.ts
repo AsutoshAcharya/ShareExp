@@ -12,4 +12,5 @@ router.get(
   verifyUser,
   PostController.getPostsByUserId
 );
+router.get("/get-few-posts", PostController.getFewPosts);
 export default router;
