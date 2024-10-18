@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import countries from "./country.json";
 import BasicInput from "../../components/BasicInput";
 import { registerData } from "./registerData";
-const Register = () => {
+
+interface RegisterProps{
+  setRegister:Dispatch<SetStateAction<boolean>>
+}
+
+const Register:FC<RegisterProps> = ({setRegister}) => {
   const country = Object.values(countries).map((item) => item.country);
 
-  console.log(country);
 
-  const [registerState, setRegister] = useState(registerData);
+  const [registerState, setRegisterState] = useState(registerData);
   return (
     <div>
       <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">
@@ -59,7 +63,12 @@ const Register = () => {
            TBD
           </select>
         </div>
+       
       </form>
+      <div className="w-full flex items-center flex-col">
+      <button className="mt-8  w-24 text-white bg-blue-700 hover:bg-blue-800 rounded-sm">Register</button>
+      <p className="mt-4 flex justify-center w-full text-sm text-gray-600 dark:text-gray-300">Already have an account!{"  "}<a href="#" className="text-indigo-600 hover:underline" onClick={()=>setRegister(false)}> Sign in</a></p>
+    </div>
     </div>
   );
 };
