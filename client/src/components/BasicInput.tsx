@@ -17,7 +17,6 @@ const BasicInput: FC<Props> = ({ label, ...rest }) => {
       <input
         id={label}
         className="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:placeholder-gray-400 dark:text-white"
-        // placeholder="you@example.com"
         {...rest}
       />
     </div>
