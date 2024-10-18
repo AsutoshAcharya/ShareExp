@@ -91,3 +91,66 @@ export const getPostsByUserId: RequestHandler<
     next(error);
   }
 };
+
+export const getFewPosts: RequestHandler<
+  any,
+  unknown,
+  unknown,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const top5Posts = await PostModel.aggregate([
+      {
+        $addFields: {
+          posted_by: { $toObjectId: "$posted_by" },
+          // Convert posted_by to ObjectId
+          //because the posted_by is saved as string and in users table its ObjectId
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "posted_by",
+          foreignField: "_id",
+          as: "user_details",
+        },
+      },
+      {
+        $unwind: "$user_details", // Unwind the user_details array to deconstruct it
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          body: 1,
+          posted_by: 1,
+          image: 1,
+          total_likes: 1,
+          total_comments: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          created_by_id: "$user_details._id",
+          created_by: "$user_details.user_name",
+          email: "$user_details.email",
+          country: "$user_details.country",
+          company: "$user_details.company",
+          profile_picture: "$user_details.profile_picture",
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+    // console.log(top5Posts);
+    res.status(200).send(top5Posts);
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllPosts: RequestHandler<any, unknown, unknown, unknown> = (
+  req,
+  res,
+  next
+) => {
+  //implement offset
+};
