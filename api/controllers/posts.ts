@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import PostModel, { Post } from "../models/Post";
-import UserSchema from "../models/User";
+import UserModel from "../models/User";
+import LikeModel from "../models/Like";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
 interface EditPost extends Post {
@@ -22,7 +23,7 @@ export const createPost: RequestHandler<
     if (!mongoose.Types.ObjectId.isValid(posted_by)) {
       return next(createHttpError(400, "Invalid user ID format"));
     }
-    const user = await UserSchema.findOne({ _id: posted_by });
+    const user = await UserModel.findOne({ _id: posted_by });
     if (!user)
       throw createHttpError(
         401,
@@ -153,4 +154,67 @@ export const getAllPosts: RequestHandler<any, unknown, unknown, unknown> = (
   next
 ) => {
   //implement offset
+};
+type LikePost = {
+  user_id?: string;
+  post_id?: string;
+};
+export const likePost: RequestHandler<any, unknown, LikePost, unknown> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { user_id, post_id } = req.body;
+    if (!user_id || !post_id) throw createHttpError(404, "Parameters missing");
+    const post = await PostModel.findById({ _id: post_id });
+    if (!post) throw createHttpError(404, "Post not found");
+    const user = await UserModel.findById({ _id: user_id });
+    if (!user) throw createHttpError(404, "User not found please register");
+    const alreadyLiked = await LikeModel.find({ user_id, post_id });
+
+    if (alreadyLiked.length > 0)
+      throw createHttpError(400, "You have already liked the post");
+    const addLike = await LikeModel.create({ user_id, post_id });
+
+    //increase total_likes of Post table add logic below
+    const incrementPostLike = await PostModel.findOneAndUpdate(
+      { _id: post_id },
+      { $inc: { total_likes: 1 } },
+      { new: true }
+    );
+    res.status(200).json(incrementPostLike);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removePostLike: RequestHandler<
+  any,
+  unknown,
+  LikePost,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { user_id, post_id } = req.body;
+    if (!user_id || !post_id) throw createHttpError(404, "Parameters missing");
+    const post = await PostModel.findById({ _id: post_id });
+    if (!post) throw createHttpError(404, "Post not found");
+    const user = await UserModel.findById({ _id: user_id });
+    if (!user) throw createHttpError(404, "User not found please register");
+    const alreadyLiked = await LikeModel.find({ post_id, user_id });
+    if (alreadyLiked.length > 0) {
+      await LikeModel.deleteOne({ post_id, user_id });
+      await PostModel.findOneAndUpdate(
+        { _id: post_id },
+        { $inc: { total_likes: -1 } },
+        { new: true }
+      );
+      res.status(200).json("Post like removed");
+    } else {
+      throw createHttpError(400, "You have not liked the post yet");
+    }
+  } catch (error) {
+    next(error);
+  }
 };
