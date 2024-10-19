@@ -2,8 +2,10 @@ import { RequestHandler } from "express";
 import PostModel, { Post } from "../models/Post";
 import UserModel from "../models/User";
 import LikeModel from "../models/Like";
+import CommentModel from "../models/Comment";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
+import { CommentPost, LikePost } from "./type";
 interface EditPost extends Post {
   edited_by: string;
 }
@@ -155,10 +157,7 @@ export const getAllPosts: RequestHandler<any, unknown, unknown, unknown> = (
 ) => {
   //implement offset
 };
-type LikePost = {
-  user_id?: string;
-  post_id?: string;
-};
+
 export const likePost: RequestHandler<any, unknown, LikePost, unknown> = async (
   req,
   res,
@@ -201,7 +200,7 @@ export const removePostLike: RequestHandler<
     const post = await PostModel.findById({ _id: post_id });
     if (!post) throw createHttpError(404, "Post not found");
     const user = await UserModel.findById({ _id: user_id });
-    if (!user) throw createHttpError(404, "User not found please register");
+    if (!user) throw createHttpError(404, "User not found, please register");
     const alreadyLiked = await LikeModel.find({ post_id, user_id });
     if (alreadyLiked.length > 0) {
       await LikeModel.deleteOne({ post_id, user_id });
@@ -214,6 +213,33 @@ export const removePostLike: RequestHandler<
     } else {
       throw createHttpError(400, "You have not liked the post yet");
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const commentOnPost: RequestHandler<
+  any,
+  unknown,
+  CommentPost,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { user_id, post_id, comment } = req.body;
+    if (!user_id || !post_id || !comment)
+      throw createHttpError(404, "Parameters missing");
+    const post = await PostModel.findById({ _id: post_id });
+    if (!post) throw createHttpError(404, "Post not found");
+    const user = await UserModel.findById({ _id: user_id });
+    if (!user) throw createHttpError(404, "User not found, please register");
+    const addComment = await CommentModel.create({ user_id, post_id, comment });
+    //incrementTotalComment
+    await PostModel.findByIdAndUpdate(
+      { _id: post_id },
+      { $inc: { total_comments: 1 } },
+      { new: true }
+    );
+    res.status(200).json(addComment);
   } catch (error) {
     next(error);
   }

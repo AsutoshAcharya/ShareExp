@@ -176,18 +176,32 @@ export const getUserInfo: RequestHandler<
   }
 };
 
-export const editUser: RequestHandler<any, unknown, SignUpBody, unknown> = (
-  req,
-  res,
-  next
-) => {
+export const editUser: RequestHandler<
+  any,
+  unknown,
+  SignUpBody,
+  unknown
+> = async (req, res, next) => {
   try {
     const { userId } = Some.Object(req?.params || {});
-    if (!userId) throw createHttpError(400, "Parameter missing");
-    findErrorInUserBody(
-      req?.body,
-      async (passwordRaw = "") => {
-        const {
+    if (!userId) throw createHttpError(400, "userId missing");
+    const {
+      user_name,
+      email,
+      phone,
+      country,
+      year_of_experience,
+      company,
+      skills,
+      profile_picture,
+      about,
+      socials,
+    } = req.body;
+
+    const updatedUser = await UserModel.updateOne(
+      { _id: userId },
+      {
+        $set: {
           user_name,
           email,
           phone,
@@ -198,29 +212,10 @@ export const editUser: RequestHandler<any, unknown, SignUpBody, unknown> = (
           profile_picture,
           about,
           socials,
-        } = req.body;
-
-        const updatedUser = await UserModel.updateOne(
-          { _id: userId },
-          {
-            $set: {
-              user_name,
-              email,
-              phone,
-              country,
-              year_of_experience,
-              company,
-              skills,
-              profile_picture,
-              about,
-              socials,
-            },
-          }
-        );
-        res.status(200).json(updatedUser);
-      },
-      next
+        },
+      }
     );
+    res.status(200).json(updatedUser);
   } catch (error) {
     next(error);
   }
