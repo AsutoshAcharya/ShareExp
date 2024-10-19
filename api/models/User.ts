@@ -6,7 +6,7 @@ const userSchema = new Schema({
   password: { type: String, required: true, select: false },
   phone: { type: String, required: true, unique: true },
   country: { type: String, required: true },
-  year_of_experience: { type: String, required: true },
+  year_of_experience: { type: String },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   company: { type: String },
   skills: { type: [String] },
@@ -17,11 +17,9 @@ const userSchema = new Schema({
       type: {
         type: String,
         enum: ["LinkedIn", "Twitter", "Portfolio", "GitHub"],
-        required: true,
       },
       link: {
         type: String,
-        required: true,
       },
     },
   ],

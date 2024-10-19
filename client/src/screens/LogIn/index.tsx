@@ -15,11 +15,11 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div className="min-h-screen flex items-center justify-center bg-[url('./Assets/LoginImage.jpg')] bg-cover bg-center p-4 relative">
+      <div className="min-h-screen flex items-center justify-center bg-[url('./Assets/LoginImage.jpg')] bg-cover bg-center p-4 relative overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, x: 100 }} // Start off-screen
+          initial={{ opacity: 0, x: 900 }} // Start off-screen
           animate={{ opacity: 0.8, x: 0 }} // Animate into place
-          transition={{ duration: 1.2, ease: "easeInOut" }} // Smooth transition
+          transition={{ duration: 0.6, ease: "easeInOut" }} // Smooth transition
           className={`bg-white dark:bg-gray-800 shadow-lg p-8 absolute right-0 h-[100vh] opacity-85 transition-all duration-300 ${
             register ? "w-2/3" : "w-1/3"
           }`}
