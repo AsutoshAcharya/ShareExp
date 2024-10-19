@@ -1,27 +1,11 @@
 import { Fragment, useState } from "react";
-import BasicInput from "../../components/BasicInput";
-import Register from "../Register";
+//other imports
 import { motion } from "framer-motion"; // Import framer-motion
 
-const emptyLoginData: Array<{
-  label: string;
-  value: string;
-  error: boolean;
-  placeHolder: string;
-}> = [
-  {
-    label: "email",
-    value: "",
-    error: false,
-    placeHolder: "you@example.com",
-  },
-  {
-    label: "password",
-    value: "",
-    error: false,
-    placeHolder: "••••••••",
-  },
-];
+//local imports
+import BasicInput from "../../components/BasicInput";
+import Register from "../Register";
+import { emptyLoginData } from "./emptyLoginData";
 
 const Login = () => {
   const [loginState, setLoginState] = useState(emptyLoginData);
@@ -31,11 +15,11 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div className="min-h-screen flex items-center justify-center bg-[url('./Assets/LoginImage.jpg')] bg-cover bg-center p-4 relative">
+      <div className="min-h-screen flex items-center justify-center bg-[url('./Assets/LoginImage.jpg')] bg-cover bg-center p-4 relative overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, x: 100 }} // Start off-screen
+          initial={{ opacity: 0, x: 900 }} // Start off-screen
           animate={{ opacity: 0.8, x: 0 }} // Animate into place
-          transition={{ duration: 1.2, ease: "easeInOut" }} // Smooth transition
+          transition={{ duration: 0.6, ease: "easeInOut" }} // Smooth transition
           className={`bg-white dark:bg-gray-800 shadow-lg p-8 absolute right-0 h-[100vh] opacity-85 transition-all duration-300 ${
             register ? "w-2/3" : "w-1/3"
           }`}
@@ -48,7 +32,7 @@ const Login = () => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
             >
-              <Register setRegister={setRegister} />
+              <Register onSignInClick={() => setRegister(false)} />
             </motion.div>
           ) : (
             <motion.div
@@ -60,11 +44,12 @@ const Login = () => {
             >
               <div className="text-center mb-6">
                 <motion.h2
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.5 }}
-                className="text-3xl font-semibold text-gray-800 dark:text-white">
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-3xl font-semibold text-gray-800 dark:text-white"
+                >
                   Login
                 </motion.h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
@@ -114,13 +99,12 @@ const Login = () => {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Don't have an account?{" "}
-                  <a
-                    href="#"
+                  <button
                     className="text-indigo-600 hover:underline"
                     onClick={() => setRegister(true)}
                   >
                     Register
-                  </a>
+                  </button>
                 </p>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                   <a href="#" className="text-indigo-600 hover:underline">

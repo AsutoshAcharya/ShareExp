@@ -1,58 +1,60 @@
-export  const registerData : Array<{
-    label: string;
-    value: string;
-    error: boolean;
-    placeHolder: string;
-    type:string;
+export const registerData: Array<{
+  label: string;
+  value: string;
+  placeHolder: string;
+  type: string;
+  required: boolean;
+  validate?: (val: string) => string | undefined;
 }> = [
-    {
-        label: "name",
-        value: "",
-        error: false,
-        placeHolder: "Enter your name",
-        type:'text'
-      },
-      {
-        label: "email",
-        value: "",
-        error: false,
-        placeHolder: "xxx@xxx.com",
-            type:'text'
-      },
-      {
-        label: "password",
-        value: "",
-        error: false,
-        placeHolder:"••••••••",
-        type:'password'
-      },
-      {
-        label: "years of Experience",
-        value: "",
-        error: false,
-        placeHolder:"1-2",
-            type:'text'
-      },
-      {
-        label: "company",
-        value: "",
-        error: false,
-        placeHolder:"company name",
-            type:'text'
-      },
-      {
-        label: "phone",
-        value: "",
-        error: false,
-        placeHolder:"123123121",
-            type:'text'
-      },
-      {
-        label: "about",
-        value: "",
-        error: false,
-        placeHolder:"brief yourself",
-            type:'textarea'
-      },
-  
-]
+  {
+    label: "name",
+    value: "dasdsad",
+    placeHolder: "Enter your name",
+    required: true,
+    type: "text",
+    validate: (val: string) =>
+      val.trim().length < 3 ? "Please enter a valid name" : undefined,
+  },
+  {
+    label: "email",
+    value: "",
+    placeHolder: "xxx@xxx.com",
+    required: true,
+    type: "text",
+  },
+  {
+    label: "phone",
+    value: "",
+    placeHolder: "123123121",
+    required: true,
+    type: "text",
+  },
+  {
+    label: "password",
+    value: "",
+    placeHolder: "••••••••",
+    required: true,
+    type: "password",
+  },
+  {
+    label: "company",
+    value: "",
+    placeHolder: "company name",
+    type: "text",
+    required: false,
+  },
+  {
+    label: "Years Of Experience",
+    value: "",
+    placeHolder: "1-2",
+    required: false,
+    type: "text",
+  },
+  {
+    label: "about",
+    value: "",
+    placeHolder: "brief yourself",
+    type: "text",
+    required: false,
+  },
+];
