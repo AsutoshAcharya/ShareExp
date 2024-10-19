@@ -59,9 +59,14 @@ const Login = () => {
               transition={{ duration: 0.5 }}
             >
               <div className="text-center mb-6">
-                <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">
+                <motion.h2
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.5 }}
+                className="text-3xl font-semibold text-gray-800 dark:text-white">
                   Login
-                </h2>
+                </motion.h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                   Welcome to the Interview Experience website. Share and read
                   experiences related to interviews in various fields.
