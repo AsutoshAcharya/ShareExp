@@ -1,27 +1,11 @@
 import { Fragment, useState } from "react";
-import BasicInput from "../../components/BasicInput";
-import Register from "../Register";
+//other imports
 import { motion } from "framer-motion"; // Import framer-motion
 
-const emptyLoginData: Array<{
-  label: string;
-  value: string;
-  error: boolean;
-  placeHolder: string;
-}> = [
-  {
-    label: "email",
-    value: "",
-    error: false,
-    placeHolder: "you@example.com",
-  },
-  {
-    label: "password",
-    value: "",
-    error: false,
-    placeHolder: "••••••••",
-  },
-];
+//local imports
+import BasicInput from "../../components/BasicInput";
+import Register from "../Register";
+import { emptyLoginData } from "./emptyLoginData";
 
 const Login = () => {
   const [loginState, setLoginState] = useState(emptyLoginData);
@@ -48,7 +32,7 @@ const Login = () => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
             >
-              <Register setRegister={setRegister} />
+              <Register onSignInClick={() => setRegister(false)} />
             </motion.div>
           ) : (
             <motion.div
@@ -60,11 +44,12 @@ const Login = () => {
             >
               <div className="text-center mb-6">
                 <motion.h2
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.5 }}
-                className="text-3xl font-semibold text-gray-800 dark:text-white">
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-3xl font-semibold text-gray-800 dark:text-white"
+                >
                   Login
                 </motion.h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
@@ -114,13 +99,12 @@ const Login = () => {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Don't have an account?{" "}
-                  <a
-                    href="#"
+                  <button
                     className="text-indigo-600 hover:underline"
                     onClick={() => setRegister(true)}
                   >
                     Register
-                  </a>
+                  </button>
                 </p>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                   <a href="#" className="text-indigo-600 hover:underline">

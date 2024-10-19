@@ -1,14 +1,14 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import { FC, useState } from "react";
 import countries from "./country.json";
 import BasicInput from "../../components/BasicInput";
 import { registerData } from "./registerData";
 import { motion } from "framer-motion";
 
 interface RegisterProps {
-  setRegister: Dispatch<SetStateAction<boolean>>;
+  onSignInClick: () => void;
 }
 
-const Register: FC<RegisterProps> = ({ setRegister }) => {
+const Register: FC<RegisterProps> = ({ onSignInClick }) => {
   const country = Object.values(countries).map((item) => item.country);
 
   const [registerState, setRegisterState] = useState(registerData);
@@ -72,7 +72,7 @@ const Register: FC<RegisterProps> = ({ setRegister }) => {
 
       <div className="w-full flex items-center flex-col">
         <motion.button
-          className="mt-8 w-24 text-white bg-blue-700 hover:bg-blue-800 rounded-sm"
+          className="mt-8 w-24 text-white bg-blue-700 hover:bg-blue-800 rounded-sm h-10"
           whileHover={{ scale: 1.1 }} // Hover animation
           whileTap={{ scale: 0.9 }} // Tap animation
         >
@@ -81,14 +81,12 @@ const Register: FC<RegisterProps> = ({ setRegister }) => {
 
         <p className="mt-4 flex justify-center w-full text-sm text-gray-600 dark:text-gray-300">
           Already have an account!{" "}
-          <a
-            href="#"
+          <button
             className="text-indigo-600 hover:underline"
-            onClick={() => setRegister(false)}
+            onClick={onSignInClick}
           >
-            {" "}
             Sign in
-          </a>
+          </button>
         </p>
       </div>
     </motion.div>
