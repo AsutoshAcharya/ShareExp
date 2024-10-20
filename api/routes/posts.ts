@@ -13,6 +13,7 @@ router.get(
   PostController.getPostsByUserId
 );
 router.get("/get-few-posts", PostController.getFewPosts);
+router.get("/get-all-posts", authenticateToken, PostController.getAllPosts);
 
 router.post("/like-post", authenticateToken, PostController.likePost);
 router.post("/remove-like", authenticateToken, PostController.removePostLike);

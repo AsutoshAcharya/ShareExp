@@ -14,3 +14,8 @@ export type UserRating = {
   giver_user_id?: string;
   rating?: 1 | 2 | 3 | 4 | 5;
 };
+
+export type AllPostBody = {
+  limit: string;
+  offset: string;
+};
