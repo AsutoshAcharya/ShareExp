@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 import env from "../enviroment";
-
+// console.log(env);
 export const INSTANCE_CONFIG = {
   baseURL: env,
   headers: {
@@ -8,7 +8,7 @@ export const INSTANCE_CONFIG = {
   },
 };
 function apiPromise(
-  instance: AxiosInstance,
+  _instance: AxiosInstance,
   request: () => Promise<AxiosResponse>
 ) {
   return new Promise<any>((resolve) =>
