@@ -1,6 +1,7 @@
 function getEnv() {
-  if (window.location.pathname.includes("localhost"))
-    return "http://localhost:8080";
+  console.log(window.location);
+  if (window.location.href.includes("localhost"))
+    return "http://localhost:8800";
   //later when deployed
   return "";
 }
