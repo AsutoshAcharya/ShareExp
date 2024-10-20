@@ -244,3 +244,48 @@ export const commentOnPost: RequestHandler<
     next(error);
   }
 };
+
+export const getCommentsByPostId: RequestHandler<
+  any,
+  unknown,
+  any,
+  unknown
+> = async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    if (!postId) throw createHttpError(400, "Parameter postId missing");
+    const post = await PostModel.findById({ _id: postId });
+    if (!post) throw createHttpError(400, "Post not found");
+    const allComments = await CommentModel.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user_details",
+        },
+      },
+      {
+        $unwind: "$user_details",
+      },
+      {
+        $project: {
+          _id: 1,
+          comment: 1,
+          post_id: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          commented_by_id: "$user_details._id",
+          commented_by_name: "$user_details.user_name",
+          // email: "$user_details.email",
+          country: "$user_details.country",
+          company: "$user_details.company",
+          profile_picture: "$user_details.profile_picture",
+        },
+      },
+    ]);
+    res.status(200).json(allComments);
+  } catch (error) {
+    next(error);
+  }
+};
