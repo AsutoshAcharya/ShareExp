@@ -1,16 +1,14 @@
-import { RequestHandler } from "express";
+import { NextFunction, RequestHandler, Response } from "express";
 import PostModel, { Post } from "../models/Post";
 import UserModel from "../models/User";
 import LikeModel from "../models/Like";
 import CommentModel from "../models/Comment";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
-import { CommentPost, LikePost } from "./type";
+import { AllPostBody, CommentPost, LikePost } from "./type";
+import { Some } from "../utils/Some";
 interface EditPost extends Post {
   edited_by: string;
-}
-interface PostParams {
-  postId: string;
 }
 export const createPost: RequestHandler<
   unknown,
@@ -101,8 +99,18 @@ export const getFewPosts: RequestHandler<
   unknown,
   unknown
 > = async (req, res, next) => {
+  getPostData(next, res);
+};
+
+async function getPostData(
+  next: NextFunction,
+  res: Response,
+  limit: number = 5,
+  offset: number = 0
+) {
   try {
-    const top5Posts = await PostModel.aggregate([
+    console.log(limit, offset);
+    const posts = await PostModel.aggregate([
       {
         $addFields: {
           posted_by: { $toObjectId: "$posted_by" },
@@ -142,19 +150,28 @@ export const getFewPosts: RequestHandler<
       },
     ])
       .sort({ updatedAt: "desc" })
-      .limit(5);
+      .skip(offset)
+      .limit(limit);
     // console.log(top5Posts);
-    res.status(200).send(top5Posts);
+    res.status(200).json(posts);
   } catch (error) {
     next(error);
   }
-};
-export const getAllPosts: RequestHandler<any, unknown, unknown, unknown> = (
+}
+export const getAllPosts: RequestHandler<any, unknown, unknown, AllPostBody> = (
   req,
   res,
   next
 ) => {
-  //implement offset
+  //implement offset or in mongodb its skip
+
+  const { limit, offset } = req.query;
+  const limitNum = Some.Number(limit);
+  const offsetNum = Some.Number(offset);
+  if (!limit || !offset) throw createHttpError(404, "Limit and skip missing");
+  if (limitNum > 10) throw createHttpError(400, "maximum limit can be 10");
+  if (offsetNum > 10) throw createHttpError(400, "Maximum offset can be 10");
+  getPostData(next, res, limitNum, offsetNum);
 };
 
 export const likePost: RequestHandler<any, unknown, LikePost, unknown> = async (
