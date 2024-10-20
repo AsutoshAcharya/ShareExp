@@ -140,10 +140,9 @@ export const getFewPosts: RequestHandler<
           profile_picture: "$user_details.profile_picture",
         },
       },
-      {
-        $limit: 5,
-      },
-    ]);
+    ])
+      .sort({ updatedAt: "desc" })
+      .limit(5);
     // console.log(top5Posts);
     res.status(200).send(top5Posts);
   } catch (error) {
