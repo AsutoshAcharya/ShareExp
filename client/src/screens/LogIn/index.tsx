@@ -59,42 +59,57 @@ const Login = () => {
               </div>
 
               <form
-                className="space-y-6"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleLogin();
-                }}
-              >
-                {loginState.map((state, idx) => (
-                  <BasicInput
-                    key={state.label}
-                    label={state.label}
-                    placeholder={state.placeHolder}
-                    required
-                    id={state.label}
-                    type={state.label}
-                    value={state.value}
-                    onChange={(e) =>
-                      setLoginState((prev) => {
-                        const updatedData = prev.map((p, index) =>
-                          index !== idx ? p : { ...p, value: e.target.value }
-                        );
-                        return updatedData;
-                      })
-                    }
-                  />
-                ))}
+  className="space-y-6"
+  onSubmit={(e) => {
+    e.preventDefault();
+    handleLogin();
+  }}
+>
+  {loginState.map((state, idx) => (
+    <BasicInput
+      key={state.label}
+      label={state.label}
+      placeholder={state.placeHolder}
+      required={state.required}
+      id={state.label}
+      type={state.label}
+      value={state.value}
+      helperText={
+        (state.touched && state.validate) ? state.validate(state.value) : ""
+      }
+      onChange={(e) =>
+        setLoginState((prev) => {
+          const updatedData = prev.map((p, index) =>
+            index !== idx
+              ? p
+              : { ...p, value: e.target.value }
+          );
+          return updatedData;
+        })
+      }
+      onBlur={() =>
+        setLoginState((prev) => {
+          const updatedData = prev.map((p, index) =>
+            index !== idx
+              ? p
+              : { ...p, touched: true }
+          );
+          return updatedData;
+        })
+      }
+    />
+  ))}
 
-                <motion.button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  whileHover={{ scale: 1.05 }} // Scale up slightly on hover
-                  whileTap={{ scale: 0.95 }} // Scale down slightly on click
-                  transition={{ duration: 0.2 }}
-                >
-                  Login
-                </motion.button>
-              </form>
+  <motion.button
+    type="submit"
+    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    whileHover={{ scale: 1.05 }} // Scale up slightly on hover
+    whileTap={{ scale: 0.95 }} // Scale down slightly on click
+    transition={{ duration: 0.2 }}
+  >
+    Login
+  </motion.button>
+</form>
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
