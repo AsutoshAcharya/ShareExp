@@ -8,7 +8,7 @@ export const registerData: Array<{
 }> = [
   {
     label: "name",
-    value: "dasdsad",
+    value: "",
     placeHolder: "Enter your name",
     required: true,
     type: "text",

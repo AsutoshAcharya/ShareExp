@@ -24,7 +24,7 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
         Register
       </h2>
       <form className="grid grid-cols-2 gap-2">
-        {registerState.map((state) => {
+        {registerState.map((state, idx) => {
           return (
             <div key={state.label} className="mb-2">
               <BasicInput
@@ -35,7 +35,15 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
                 id={state.label}
                 type={state.type}
                 helperText={state?.validate ? state?.validate(state.value) : ""}
-                onChange={() => {}}
+                onChange={(e) => {
+                  setRegisterState((prev) => {
+                    const updatedState = prev.map((data, index) =>
+                      index !== idx ? data : { ...data, value: e.target.value }
+                    );
+                    return updatedState;
+                  });
+         
+                }}
               />
             </div>
           );
