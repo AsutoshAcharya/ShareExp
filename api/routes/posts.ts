@@ -17,4 +17,10 @@ router.get("/get-few-posts", PostController.getFewPosts);
 router.post("/like-post", authenticateToken, PostController.likePost);
 router.post("/remove-like", authenticateToken, PostController.removePostLike);
 router.post("/add-comment", authenticateToken, PostController.commentOnPost);
+//user needs to login to see the comments
+router.get(
+  "/get-comment/:postId",
+  authenticateToken,
+  PostController.getCommentsByPostId
+);
 export default router;
