@@ -1,3 +1,5 @@
+import { validateEmail, validatePassword } from "../../helpers/regex";
+import { validateName, validatePhoneNumber } from "./RegisterRegex";
 export const registerData: Array<{
   label: string;
   value: string;
@@ -5,6 +7,7 @@ export const registerData: Array<{
   type: string;
   required: boolean;
   validate?: (val: string) => string | undefined;
+  touched?:boolean;
 }> = [
   {
     label: "name",
@@ -12,8 +15,12 @@ export const registerData: Array<{
     placeHolder: "Enter your name",
     required: true,
     type: "text",
-    validate: (val: string) =>
-      val.trim().length < 3 ? "Please enter a valid name" : undefined,
+    validate: (val: string) =>{
+      if(!validateName(val)){
+        return "Invalid name"
+      }
+    return undefined;
+  }
   },
   {
     label: "email",
@@ -21,6 +28,13 @@ export const registerData: Array<{
     placeHolder: "xxx@xxx.com",
     required: true,
     type: "text",
+    touched: false,
+    validate: (val: string) => {
+      if (!validateEmail(val)) {
+        return "Please enter a valid email address.";
+      }
+      return undefined;
+    }
   },
   {
     label: "phone",
@@ -28,6 +42,13 @@ export const registerData: Array<{
     placeHolder: "123123121",
     required: true,
     type: "text",
+    touched: false,
+    validate: (val: string) => {
+      if (!validatePhoneNumber(val)) {
+        return "Please enter a valid Phone number.";
+      }
+      return undefined;
+    }
   },
   {
     label: "password",
@@ -35,6 +56,13 @@ export const registerData: Array<{
     placeHolder: "••••••••",
     required: true,
     type: "password",
+    touched:false,
+    validate: (val: string) => {
+      if (!validatePassword(val)) {
+        return "Please enter a valid password. The password must be 8 character long with a Capital Alphabet and a special character.";
+      }
+      return undefined;
+    }
   },
   {
     label: "company",
@@ -42,6 +70,13 @@ export const registerData: Array<{
     placeHolder: "company name",
     type: "text",
     required: false,
+    touched:false,
+    validate: (val: string) => {
+      if (val.length <= 4) {
+        return "Please enter a valid Company name";
+      }
+      return undefined;
+    }
   },
   {
     label: "Years Of Experience",
@@ -49,6 +84,8 @@ export const registerData: Array<{
     placeHolder: "1-2",
     required: false,
     type: "text",
+    touched:false
+    
   },
   {
     label: "about",
@@ -56,5 +93,12 @@ export const registerData: Array<{
     placeHolder: "brief yourself",
     type: "text",
     required: false,
+    touched:false,
+    validate: (val: string) => {
+      if (val.length < 25) {
+        return "Please add about yourself";
+      }
+      return undefined;
+    }
   },
 ];
