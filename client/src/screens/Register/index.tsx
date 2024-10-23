@@ -44,6 +44,16 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
                   });
          
                 }}
+                onBlur={() =>
+                  setRegisterState((prev) => {
+                    const updatedData = prev.map((p, index) =>
+                      index !== idx
+                        ? p
+                        : { ...p, touched: true }
+                    );
+                    return updatedData;
+                  })
+                }
               />
             </div>
           );

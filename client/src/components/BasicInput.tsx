@@ -1,6 +1,5 @@
 import { FC, InputHTMLAttributes } from "react";
 import toTitleCase from "../helpers/toTitleCase";
-import { Some } from "../helpers/Some";
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   helperText?: string;
