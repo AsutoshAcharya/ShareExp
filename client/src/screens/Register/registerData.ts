@@ -85,7 +85,6 @@ export const registerData: Array<{
     required: false,
     type: "text",
     touched:false
-    
   },
   {
     label: "about",
