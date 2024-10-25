@@ -9,21 +9,25 @@ import { emptyLoginData } from "./emptyLoginData";
 import { useApiCall } from "../../hooks";
 import { User } from "../../services";
 import { toast } from "react-toastify";
-import { useAuthStore } from "../../store/authStore";
+import { toUser, useAuthStore } from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import RoutesMap from "../../AppRoutes/RoutesMap.ts";
 
 const Login = () => {
   const [loginState, setLoginState] = useState(emptyLoginData);
   const [register, setRegister] = useState<boolean>(false);
   const { login: addLoginDataToStore } = useAuthStore();
-
+  const navigate = useNavigate();
   const login = useApiCall({
     fn: User.loginUser,
     onError: (d) => {
       console.log(d);
       toast.error("Something went wrong");
     },
-    onSuccess: (data: any) => {
-      console.log(data);
+    onSuccess: (resp: any) => {
+      console.log(resp?.data);
+      addLoginDataToStore(toUser(resp?.data));
+      navigate("/" + RoutesMap.PRIVATE_HOME.path);
       toast.success("Login Successful");
     },
   });
@@ -121,8 +125,8 @@ const Login = () => {
                 <motion.button
                   type="submit"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  whileHover={{ scale: 1.05 }} // Scale up slightly on hover
-                  whileTap={{ scale: 0.95 }} // Scale down slightly on click
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
                   Login

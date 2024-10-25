@@ -11,7 +11,7 @@ const UserAvatar: FC<Props> = ({ size, name, imageUrl, ...rest }) => {
   return (
     <div
       {...rest}
-      className={`bg-cover bg-center rounded-full bg-red-300 text-xl font-bold text-blue-700 flex justify-center items-center`}
+      className={`bg-cover bg-center rounded-full bg-red-300 text-xl font-bold text-blue-700 flex justify-center items-center cursor-pointer`}
       style={{
         width: `${size}px`,
         height: `${size}px`,

@@ -5,7 +5,7 @@ const baseUrl = `/api/users`;
 
 export default class User {
   static loginUser(values: any) {
-    // setHeaders(instance,values.token,values.userId); //pass this authentication apis
+    // setHeaders(instance,values.token,values.id); //pass this authentication apis
     return apiPromise(instance, () =>
       instance.post(baseUrl + "/login", values.data)
     );
