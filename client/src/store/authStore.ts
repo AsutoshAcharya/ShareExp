@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User } from "./types";
+import { Social, User } from "./types";
 import { devtools, persist } from "zustand/middleware";
 import { Some } from "../helpers/Some";
 
@@ -26,10 +26,27 @@ const useAuthStore = create<
   )
 );
 
-export function toUser(data: any): User {
+export function toUser(auth: any): User {
+  const { user } = auth;
   return {
-    name: Some.String(data?.user_name),
-    email: Some.String(data?.email),
+    id: Some.String(user?._id),
+    name: Some.String(user?.user_name),
+    token: Some.String(auth?.token),
+    email: Some.String(user?.email),
+    phone: Some.String(user?.phone),
+    country: Some.String(user?.country),
+    yearOfExperience: Some.String(user?.year_of_experience),
+    company: Some.String(user?.company),
+    skills: Some.Array(user?.skills).map((skill) => Some.String(skill)),
+    profilePicture: Some.String(user?.profile_picture),
+    about: Some.String(user?.about),
+    socials: Some.Array(user?.socials).map(
+      (item: any) =>
+        ({
+          type: Some.String(item?.type),
+          link: Some.String(item?.link),
+        } as Social)
+    ),
   };
 }
 

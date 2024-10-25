@@ -11,9 +11,12 @@ import { groupBy } from "./helpers";
 import GetRoute from "./AppRoutes/GetRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useCreds from "./hooks/useUser";
+import RoutesMap from "./AppRoutes/RoutesMap";
 
 const allRoutes = groupBy(appRoutes, "kind");
 const AppRoutes = () => {
+  const { user } = useCreds("id", "token");
   return (
     <Fragment>
       <ToastContainer
@@ -29,8 +32,20 @@ const AppRoutes = () => {
       <Router>
         <Suspense fallback={<BlurryLoader />}>
           <Routes>
-            {/* {allRoutes["private"].map(GetRoute)} */}
-            {allRoutes["public"].map(GetRoute)}
+            {user.id && user.token ? (
+              <Route>
+                {allRoutes["private"].map(GetRoute)}
+                <Route
+                  path="/"
+                  element={
+                    <Navigate to={RoutesMap.PRIVATE_HOME.path} replace />
+                  }
+                />
+              </Route>
+            ) : (
+              allRoutes["public"].map(GetRoute)
+            )}
+
             {/* {allRoutes["independent"].map(GetRoute)} */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
