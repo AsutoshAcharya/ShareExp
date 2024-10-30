@@ -13,13 +13,7 @@ function GetRoute(route: AppRoute) {
   );
 }
 
-const Fallback = () => (
-  <BlurryLoader
-    height="100%"
-    width="100%"
-    style={{ position: "fixed", inset: 0 }}
-  />
-);
+const Fallback = () => <BlurryLoader />;
 
 function Suspensed(
   Component: AppRoute["Element"],

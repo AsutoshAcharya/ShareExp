@@ -1,5 +1,6 @@
 import { FC, HTMLAttributes } from "react";
 import toAvatar from "../helpers/toAvatar";
+import clsx from "clsx";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   size: number;
@@ -11,11 +12,15 @@ const UserAvatar: FC<Props> = ({ size, name, imageUrl, ...rest }) => {
   return (
     <div
       {...rest}
-      className={`bg-cover bg-center rounded-full bg-red-300 text-xl font-bold text-blue-700 flex justify-center items-center cursor-pointer`}
+      className={clsx(
+        `bg-cover bg-center rounded-full bg-blue-700 text-xl font-bold text-white flex justify-center items-center cursor-pointer`,
+        rest.className
+      )}
       style={{
         width: `${size}px`,
         height: `${size}px`,
         backgroundImage: `url(${imageUrl})`,
+        backgroundColor: rest?.style?.backgroundColor,
       }}
     >
       {!imageUrl && toAvatar(name)}

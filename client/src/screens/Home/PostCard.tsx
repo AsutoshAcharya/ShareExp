@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faComment, faShare } from "@fortawesome/free-solid-svg-icons";
-
+import { Post } from "./type";
+import UserAvatar from "../../components/UserAvatar";
+import uniqolor from "uniqolor";
 interface Comment {
   user: string;
   text: string;
@@ -9,50 +11,16 @@ interface Comment {
 }
 
 interface PostCardProps {
-  _id: number;
-  title: string;
-  body: string;
-  posted_by: string;
-  image?: string;
-  total_likes: number;
-  total_comments: number;
-  createdAt: string;
-  updatedAt?: string;
-  created_by_id: string;
-  created_by: string;
-  email: string;
-  country: string;
-  company: string;
-  profile_picture: string;
-  comments: Comment[];
+  post: Post;
 }
 
-const PostCard: React.FC<PostCardProps> = ({
-  _id,
-  title,
-  body,
-  posted_by,
-  image,
-  total_likes,
-  total_comments,
-  createdAt,
-  updatedAt,
-  created_by_id,
-  created_by,
-  email,
-  country,
-  company,
-  profile_picture,
-  comments,
-}) => {
+const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-  const [postComments, setPostComments] = useState<Comment[]>(comments);
-
-  const handleLikeClick = () => {
-    setLiked(!liked);
-  };
+  const [postComments, setPostComments] = useState<Comment[]>([]);
+  const avatarBg = uniqolor(post.postedByName).color;
+  const handleLikeClick = () => {};
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -73,32 +41,37 @@ const PostCard: React.FC<PostCardProps> = ({
   return (
     <div className="card w-full bg-white/30 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6">
       {/* Post Header */}
-      <div className="flex items-center mb-4">
-        <img
-          src={profile_picture}
-          alt={`${created_by}'s profile`}
-          className="w-12 h-12 rounded-full border border-gray-300 mr-4"
+      <div className="flex items-center mb-4 gap-3">
+        <UserAvatar
+          imageUrl={post?.profilePicture}
+          name={post?.postedByName}
+          style={{ backgroundColor: avatarBg }}
+          size={50}
         />
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">{created_by}</h2>
-          <p className="text-sm text-gray-500">
-            {company}, {country}
-          </p>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {post?.postedByName}
+          </h2>
+          {post?.company && (
+            <p className="text-sm text-gray-500">{post?.company}</p>
+          )}
           <p className="text-xs text-gray-400">
-            Posted on: {new Date(createdAt).toLocaleDateString()}
+            Posted on: {post.createdAt.toLocaleDateString()}
           </p>
-          {updatedAt && (
+          {post.updatedAt && (
             <p className="text-xs text-gray-400">
-              Updated on: {new Date(updatedAt).toLocaleDateString()}
+              Updated on: {post.updatedAt.toLocaleDateString()}
             </p>
           )}
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-700 mb-4 overflow-hidden text-ellipsis">{body}</p>
+      <h3 className="text-xl font-semibold text-gray-800 mb-2">{post.title}</h3>
+      <p className="text-gray-700 mb-4 overflow-hidden text-ellipsis">
+        {post.body}
+      </p>
 
-      {image && (
+      {/* {image && (
         <figure className="mb-4 rounded-lg overflow-hidden">
           <img
             src={image}
@@ -106,7 +79,7 @@ const PostCard: React.FC<PostCardProps> = ({
             className="w-full h-64 object-cover rounded-md border border-gray-200"
           />
         </figure>
-      )}
+      )} */}
 
       <div className="flex justify-between items-center mt-4 border-t pt-4">
         <div className="flex items-center space-x-4 text-gray-600">
@@ -117,9 +90,7 @@ const PostCard: React.FC<PostCardProps> = ({
             }`}
           >
             <FontAwesomeIcon icon={faHeart} />
-            <span className="text-sm">
-              {liked ? total_likes + 1 : total_likes}
-            </span>
+            <span className="text-sm">{post.totalLikes}</span>
           </button>
           <button
             onClick={toggleComments}
