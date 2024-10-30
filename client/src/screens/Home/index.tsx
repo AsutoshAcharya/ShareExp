@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+//local imports
+
 import NavBar from "../../components/NavBar";
 import PostCard from "./PostCard";
 import useCreds from "../../hooks/useUser";
-import { useState } from "react";
 import { Post as PostService } from "../../services";
 import { Some } from "../../helpers/Some";
 import { Post } from "./type";
@@ -28,6 +30,7 @@ const Home = () => {
       company: Some.String(data?.company),
       profilePicture: Some.String(data?.profile_picture),
       image: Some.String(data?.image),
+      isLikedByYou: Some.Boolean(data?.isLikedByYou),
     };
   }
   async function getAllPosts() {

@@ -15,7 +15,6 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const [liked, setLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [postComments, setPostComments] = useState<Comment[]>([]);
@@ -86,7 +85,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <button
             onClick={handleLikeClick}
             className={`btn btn-ghost btn-sm flex items-center space-x-1 ${
-              liked ? "text-red-500" : "text-gray-600"
+              post.isLikedByYou ? "text-red-500" : "text-gray-600"
             }`}
           >
             <FontAwesomeIcon icon={faHeart} />

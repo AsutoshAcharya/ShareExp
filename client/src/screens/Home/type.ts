@@ -12,4 +12,5 @@ export type Post = {
   company?: string;
   profilePicture?: string;
   image?: string;
+  isLikedByYou: boolean;
 };

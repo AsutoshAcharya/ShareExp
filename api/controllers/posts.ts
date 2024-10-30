@@ -99,17 +99,19 @@ export const getFewPosts: RequestHandler<
   unknown,
   unknown
 > = async (req, res, next) => {
-  getPostData(next, res);
+  getPostData(req, res, next);
 };
 
 async function getPostData(
-  next: NextFunction,
+  req: any,
   res: Response,
+  next: NextFunction,
   limit: number = 5,
   offset: number = 0
 ) {
   try {
-    console.log(limit, offset);
+    const likesData = await LikeModel.find({});
+    const accessUser = Some.String(req.headers["x-access-user"]);
     const posts = await PostModel.aggregate([
       {
         $addFields: {
@@ -152,7 +154,16 @@ async function getPostData(
       .skip(offset)
       .limit(limit);
     // console.log(top5Posts);
-    res.status(200).json(posts);
+    const updatedPosts = posts.map((post) => ({
+      ...post,
+      isLikedByYou: likesData.some(
+        (like) =>
+          like.user_id?.toString() === accessUser &&
+          like.post_id?.toString() === post._id.toString()
+      ),
+    }));
+    // console.log(updatedPosts);
+    res.status(200).json(updatedPosts);
   } catch (error) {
     next(error);
   }
@@ -169,7 +180,7 @@ export const getAllPosts: RequestHandler<any, unknown, unknown, AllPostBody> = (
   const offsetNum = Some.Number(offset);
   if (!limit || !offset) throw createHttpError(404, "Limit and skip missing");
   if (limitNum > 10) throw createHttpError(400, "maximum limit can be 10");
-  getPostData(next, res, limitNum, offsetNum);
+  getPostData(req, res, next, limitNum, offsetNum);
 };
 
 export const likePost: RequestHandler<any, unknown, LikePost, unknown> = async (
