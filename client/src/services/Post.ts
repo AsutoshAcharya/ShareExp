@@ -9,7 +9,7 @@ export default class Post {
     return apiPromise(instance, () =>
       instance.get(baseUrl + `/get-all-posts`, {
         params: {
-          limit: 10,
+          limit: 5,
           offset: values.offset,
         },
       })

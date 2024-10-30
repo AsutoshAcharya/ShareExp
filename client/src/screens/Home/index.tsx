@@ -11,6 +11,7 @@ import { BlurryLoader } from "../../components";
 const Home = () => {
   const { user } = useCreds("id", "token");
   const [offset, setOffset] = useState(0);
+  const [postData, setPostData] = useState<Array<Post>>([]);
 
   function toPost(data: any): Post {
     return {
@@ -34,21 +35,36 @@ const Home = () => {
     return Some.Array(resp?.data);
   }
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["get-all-posts", user.id],
+    queryKey: ["get-all-posts", user.id, offset],
     queryFn: getAllPosts,
     select: (data) => data.map(toPost),
+    onSuccess: (data) => {
+      setPostData((prev) => [...prev, ...data]);
+    },
     refetchOnWindowFocus: false,
     initialData: [] as Array<Post>,
   });
-  // console.log(data);
+  console.log(offset);
   return (
-    <div className="  h-screen w-screen">
+    <div className="h-screen w-screen">
       <NavBar />
-      <div className="flex flex-grow w-dvw p-5 flex-col gap-5 overflow-auto">
+      <div
+        className="flex h-[95%] flex-grow w-dvw p-5 flex-col gap-5 overflow-auto"
+        onScroll={(e) => {
+          const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
+          const diff = scrollHeight - offsetHeight;
+          if (
+            Math.floor(scrollTop) === diff ||
+            (Math.ceil(scrollTop) === diff && data.length !== 0)
+          ) {
+            setOffset((prev) => prev + 5);
+          }
+        }}
+      >
         {isLoading ? (
           <BlurryLoader style={{ height: "80dvh" }} />
         ) : (
-          data.map((post) => <PostCard key={post.id} post={post} />)
+          postData.map((post) => <PostCard key={post.id} post={post} />)
         )}
       </div>
     </div>

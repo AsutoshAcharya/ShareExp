@@ -169,7 +169,6 @@ export const getAllPosts: RequestHandler<any, unknown, unknown, AllPostBody> = (
   const offsetNum = Some.Number(offset);
   if (!limit || !offset) throw createHttpError(404, "Limit and skip missing");
   if (limitNum > 10) throw createHttpError(400, "maximum limit can be 10");
-  if (offsetNum > 10) throw createHttpError(400, "Maximum offset can be 10");
   getPostData(next, res, limitNum, offsetNum);
 };
 

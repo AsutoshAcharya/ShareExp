@@ -39,7 +39,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="card w-full bg-white/30 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6">
+    <div className="card w-full bg-white/30 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6 flex-shrink-0">
       {/* Post Header */}
       <div className="flex items-center mb-4 gap-3">
         <UserAvatar
