@@ -9,10 +9,10 @@ import { useAuthStore } from "../store/authStore";
 const NavBar = () => {
   const { user } = useCreds("token", "id", "profilePicture", "name");
   const navigate = useNavigate();
-const {logOut}=useAuthStore();
+  const { logOut } = useAuthStore();
 
   return (
-    <div className="w-full h-16 bg-white shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out">
+    <div className="w-full h-[5%] bg-white shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out">
       <p className="font-extrabold text-2xl text-gray-800 hover:text-gray-600 cursor-pointer">
         Share Exp
       </p>
@@ -38,10 +38,13 @@ const {logOut}=useAuthStore();
                   <FontAwesomeIcon icon={faUser} />
                   <span>Profile</span>
                 </button>
-                <button className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2" onClick={()=>{
-                   logOut();
-                   navigate("/"+RoutesMap.LOGIN.path)
-                }}>
+                <button
+                  className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2"
+                  onClick={() => {
+                    logOut();
+                    navigate("/" + RoutesMap.LOGIN.path);
+                  }}
+                >
                   <FontAwesomeIcon icon={faSignOutAlt} />
                   <span>LogOut</span>
                 </button>

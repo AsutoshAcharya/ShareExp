@@ -36,6 +36,7 @@ export const authenticateToken = (
   });
 };
 
+//todo need to fix verifyUser
 export const verifyUser = (
   req: CustomRequest,
   res: Response,
@@ -49,6 +50,6 @@ export const verifyUser = (
     if (Some.String(userId) === Some.String(accessUser)) {
       return next();
     }
-    throw createHttpError(404, "You are not authorized to edit this post");
+    throw createHttpError(404, "You are not authorized");
   });
 };
