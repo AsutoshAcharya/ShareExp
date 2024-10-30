@@ -1,9 +1,19 @@
 import React, { useState } from "react";
+import uniqolor from "uniqolor";
+import { useQueryClient } from "@tanstack/react-query";
+
+//icons imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faComment, faShare } from "@fortawesome/free-solid-svg-icons";
+
+//local imports
 import { Post } from "./type";
 import UserAvatar from "../../components/UserAvatar";
-import uniqolor from "uniqolor";
+import { useApiCall } from "../../hooks";
+import { Post as PostService } from "../../services";
+import useCreds from "../../hooks/useUser";
+import { toast } from "react-toastify";
+
 interface Comment {
   user: string;
   text: string;
@@ -15,11 +25,22 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const { user } = useCreds("id", "token");
   const [showComments, setShowComments] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [postComments, setPostComments] = useState<Comment[]>([]);
+  const client = useQueryClient();
+
   const avatarBg = uniqolor(post.postedByName).color;
-  const handleLikeClick = () => {};
+
+  const handleLike = useApiCall({
+    fn: post.isLikedByYou ? PostService.dislikePost : PostService.likePost,
+    onSuccess: () => {
+      toast.success(`Post ${post.isLikedByYou ? "Disliked" : "Liked"}`);
+      client.invalidateQueries(["get-all-posts", user.id]);
+    },
+    onError: () => toast.error("Something went wrong!"),
+  });
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -83,7 +104,15 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <div className="flex justify-between items-center mt-4 border-t pt-4">
         <div className="flex items-center space-x-4 text-gray-600">
           <button
-            onClick={handleLikeClick}
+            onClick={() => {
+              handleLike.mutate({
+                ...user,
+                data: {
+                  user_id: user.id,
+                  post_id: post.id,
+                },
+              });
+            }}
             className={`btn btn-ghost btn-sm flex items-center space-x-1 ${
               post.isLikedByYou ? "text-red-500" : "text-gray-600"
             }`}

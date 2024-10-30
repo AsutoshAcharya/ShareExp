@@ -150,7 +150,7 @@ async function getPostData(
         },
       },
     ])
-      .sort({ updatedAt: "desc" })
+      .sort({ createdAt: "desc" })
       .skip(offset)
       .limit(limit);
     // console.log(top5Posts);

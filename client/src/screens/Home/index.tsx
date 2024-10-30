@@ -13,6 +13,7 @@ import { BlurryLoader } from "../../components";
 const Home = () => {
   const { user } = useCreds("id", "token");
   const [offset, setOffset] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const [postData, setPostData] = useState<Array<Post>>([]);
 
   function toPost(data: any): Post {
@@ -42,7 +43,10 @@ const Home = () => {
     queryFn: getAllPosts,
     select: (data) => data.map(toPost),
     onSuccess: (data) => {
-      setPostData((prev) => [...prev, ...data]);
+      if (isAtBottom) setPostData((prev) => [...prev, ...data]);
+      else {
+        setPostData(data);
+      }
     },
     refetchOnWindowFocus: false,
     initialData: [] as Array<Post>,
@@ -56,10 +60,12 @@ const Home = () => {
         onScroll={(e) => {
           const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
           const diff = scrollHeight - offsetHeight;
+          setIsAtBottom(false);
           if (
             Math.floor(scrollTop) === diff ||
             (Math.ceil(scrollTop) === diff && data.length !== 0)
           ) {
+            setIsAtBottom(true);
             setOffset((prev) => prev + 5);
           }
         }}
