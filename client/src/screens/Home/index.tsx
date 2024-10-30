@@ -1,40 +1,55 @@
+import { useQuery } from "@tanstack/react-query";
 import NavBar from "../../components/NavBar";
 import PostCard from "./PostCard";
+import useCreds from "../../hooks/useUser";
+import { useState } from "react";
+import { Post as PostService } from "../../services";
+import { Some } from "../../helpers/Some";
+import { Post } from "./type";
+import { BlurryLoader } from "../../components";
 
 const Home = () => {
+  const { user } = useCreds("id", "token");
+  const [offset, setOffset] = useState(0);
+
+  function toPost(data: any): Post {
+    return {
+      id: Some.String(data?._id),
+      title: Some.String(data?.title),
+      body: Some.String(data?.body),
+      postedById: Some.String(data?.posted_by),
+      totalLikes: Some.Number(data?.total_likes),
+      totalComments: Some.Number(data?.total_comments),
+      createdAt: Some.Date(data?.createdAt),
+      updatedAt: Some.Date(data?.updatedAt),
+      postedByName: Some.String(data?.created_by),
+      country: Some.String(data?.country),
+      company: Some.String(data?.company),
+      profilePicture: Some.String(data?.profile_picture),
+      image: Some.String(data?.image),
+    };
+  }
+  async function getAllPosts() {
+    const resp = await PostService.getAllPost({ ...user, offset });
+    return Some.Array(resp?.data);
+  }
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["get-all-posts", user.id],
+    queryFn: getAllPosts,
+    select: (data) => data.map(toPost),
+    refetchOnWindowFocus: false,
+    initialData: [] as Array<Post>,
+  });
+  // console.log(data);
   return (
-    <div className=" bg-slate-300">
+    <div className="  h-screen w-screen">
       <NavBar />
-      <div className="flex w-dvw p-5">
-        <PostCard
-          _id={1}
-          title="Sample Title"
-          body="Sample body content for the post"
-          posted_by="User123"
-          image="https://www.shutterstock.com/image-photo/neon-avatar-vectorstyle-image-naruto-260nw-2515582615.jpg"
-          total_likes={10}
-          total_comments={5}
-          createdAt="2023-10-18T12:00:00Z"
-          updatedAt="2023-10-19T12:00:00Z"
-          created_by_id="user123"
-          created_by="John Doe"
-          email="john@example.com"
-          country="USA"
-          company="Example Corp"
-          profile_picture="https://www.shutterstock.com/image-photo/neon-avatar-vectorstyle-image-naruto-260nw-2515582615.jpg"
-          comments={[
-            {
-              user: "Jane Smith",
-              text: "Thanks for sharing! This is super helpful.",
-              date: "2023-09-22T10:30:00Z",
-            },
-            {
-              user: "Mike Johnson",
-              text: "I had a similar experience with them. Great post!",
-              date: "2023-09-23T14:45:00Z",
-            },
-          ]}
-        />
+      <div className="flex flex-grow w-dvw p-5 flex-col gap-5 overflow-auto">
+        {isLoading ? (
+          <BlurryLoader style={{ height: "80dvh" }} />
+        ) : (
+          data.map((post) => <PostCard key={post.id} post={post} />)
+        )}
       </div>
     </div>
   );

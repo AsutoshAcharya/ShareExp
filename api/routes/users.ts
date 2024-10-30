@@ -7,7 +7,11 @@ const router = express.Router();
 
 router.post("/signup", UserController.signUp);
 router.post("/login", UserController.logIn);
-router.get("/get-user-info/:userId", UserController.getUserInfo);
+router.get(
+  "/get-user-info/:userId",
+  authenticateToken,
+  UserController.getUserInfo
+);
 router.post("/edit-user/:userId", verifyUser, UserController.editUser);
 
 router.post("/give-rating", authenticateToken, RatingController.giveRating);

@@ -15,15 +15,8 @@ class RoutesMap {
     kind: "private",
   };
   // Set Main/Home route
-  static HOME: AppRoute = {
-    title: "public-home",
-    path: "/",
-    subRoutes: {},
-    Element: Home,
-    kind: "public",
-  };
   static PRIVATE_HOME: AppRoute = {
-    title: "private-home",
+    title: "home",
     path: "home",
     subRoutes: {},
     Element: Home,

@@ -8,7 +8,7 @@ router.post("/create-post", authenticateToken, PostController.createPost);
 router.post("/edit-post/:postId", verifyUser, PostController.editPost);
 router.delete("/delete-post/:postId", verifyUser, PostController.deletePost);
 router.get(
-  "/get-user-post/:userId",
+  "/get-all-posts/:userId",
   verifyUser,
   PostController.getPostsByUserId
 );
