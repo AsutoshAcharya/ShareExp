@@ -34,14 +34,14 @@ const NavBar = () => {
               </div>
               <div
                 tabIndex={0}
-                className="dropdown-content menu bg-white rounded-lg shadow-lg p-4 z-10 transition-opacity duration-200 ease-in-out w-60"
+                className="dropdown-content menu bg-white rounded-lg shadow-lg p-4 z-10 transition-opacity duration-200 ease-in-out w-60 gap-4"
               >
-                <button className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2">
+                <button className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2">
                   <FontAwesomeIcon icon={faUser} />
                   <span>Profile</span>
                 </button>
                 <button
-                  className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2"
+                  className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2"
                   onClick={() => {
                     logOut();
                     navigate("/" + RoutesMap.LOGIN.path);
