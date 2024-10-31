@@ -11,7 +11,7 @@ import { Post } from "./type";
 import UserAvatar from "../../components/UserAvatar";
 import { useApiCall } from "../../hooks";
 import { Post as PostService } from "../../services";
-import useCreds from "../../hooks/useUser";
+import useCreds from "../../hooks/useCreds";
 import { toast } from "react-toastify";
 
 interface Comment {
@@ -59,7 +59,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="card w-full bg-white/30 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6 flex-shrink-0">
+    <div className="card w-full bg-secondary backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6 flex-shrink-0">
       {/* Post Header */}
       <div className="flex items-center mb-4 gap-3">
         <UserAvatar
@@ -69,17 +69,17 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           size={50}
         />
         <div>
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-neutral">
             {post?.postedByName}
           </h2>
           {post?.company && (
-            <p className="text-sm text-gray-500">{post?.company}</p>
+            <p className="text-sm text-neutral">{post?.company}</p>
           )}
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-neutral">
             Posted on: {post.createdAt.toLocaleDateString()}
           </p>
           {post.updatedAt && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-neutral">
               Updated on: {post.updatedAt.toLocaleDateString()}
             </p>
           )}

@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import useCreds from "../hooks/useUser";
+import useCreds from "../hooks/useCreds";
 import UserAvatar from "./UserAvatar";
 import RoutesMap from "../AppRoutes/RoutesMap";
 import { useAuthStore } from "../store/authStore";
+import SelectTheme from "./SelectTheme";
 
 const NavBar = () => {
   const { user } = useCreds("token", "id", "profilePicture", "name");
@@ -17,6 +18,7 @@ const NavBar = () => {
         Share Exp
       </p>
       <div className="flex items-center space-x-4">
+        <SelectTheme />
         {user.token && user.id ? (
           <div className="relative">
             <div className="dropdown dropdown-end">
@@ -32,14 +34,14 @@ const NavBar = () => {
               </div>
               <div
                 tabIndex={0}
-                className="dropdown-content menu bg-white rounded-lg shadow-lg p-4 z-10 transition-opacity duration-200 ease-in-out w-60"
+                className="dropdown-content menu bg-white rounded-lg shadow-lg p-4 z-10 transition-opacity duration-200 ease-in-out w-60 gap-4"
               >
-                <button className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2">
+                <button className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2">
                   <FontAwesomeIcon icon={faUser} />
                   <span>Profile</span>
                 </button>
                 <button
-                  className="btn btn-ghost text-gray-800 hover:bg-gray-200 w-full text-left flex items-center space-x-2"
+                  className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2"
                   onClick={() => {
                     logOut();
                     navigate("/" + RoutesMap.LOGIN.path);

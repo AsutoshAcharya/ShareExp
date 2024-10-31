@@ -21,11 +21,11 @@ const Login = () => {
   const login = useApiCall({
     fn: User.loginUser,
     onError: (d) => {
-      console.log(d);
-      toast.error("Something went wrong");
+      // console.log(d);
+      toast.error(d?.data?.error || "Something went wrong");
     },
     onSuccess: (resp: any) => {
-      console.log(resp?.data);
+      // console.log(resp?.data);
       addLoginDataToStore(toUser(resp?.data));
       navigate("/" + RoutesMap.PRIVATE_HOME.path);
       toast.success("Login Successful");
