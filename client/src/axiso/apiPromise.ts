@@ -7,16 +7,18 @@ export const INSTANCE_CONFIG = {
     "Content-Type": "application/json",
   },
 };
+
 function apiPromise(
   _instance: AxiosInstance,
   request: () => Promise<AxiosResponse>
 ) {
-  return new Promise<any>((resolve) =>
+  return new Promise<any>((resolve, reject) =>
     request()
       .then((response) => resolve(response))
-      .catch((error) => error)
+      .catch((error) => reject(error?.response))
   );
 }
+
 export function setHeaders(
   instance: AxiosInstance,
   token: string,

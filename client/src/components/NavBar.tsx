@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import useCreds from "../hooks/useUser";
+import useCreds from "../hooks/useCreds";
 import UserAvatar from "./UserAvatar";
 import RoutesMap from "../AppRoutes/RoutesMap";
 import { useAuthStore } from "../store/authStore";
+import SelectTheme from "./SelectTheme";
 
 const NavBar = () => {
   const { user } = useCreds("token", "id", "profilePicture", "name");
@@ -17,6 +18,7 @@ const NavBar = () => {
         Share Exp
       </p>
       <div className="flex items-center space-x-4">
+        <SelectTheme />
         {user.token && user.id ? (
           <div className="relative">
             <div className="dropdown dropdown-end">

@@ -11,7 +11,7 @@ import { groupBy } from "./helpers";
 import GetRoute from "./AppRoutes/GetRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useCreds from "./hooks/useUser";
+import useCreds from "./hooks/useCreds";
 import RoutesMap from "./AppRoutes/RoutesMap";
 
 const allRoutes = groupBy(appRoutes, "kind");
@@ -43,7 +43,13 @@ const AppRoutes = () => {
                 />
               </Route>
             ) : (
-              allRoutes["public"].map(GetRoute)
+              <Route>
+                {allRoutes["public"].map(GetRoute)}
+                <Route
+                  path="/"
+                  element={<Navigate to={RoutesMap.LOGIN.path} replace />}
+                />
+              </Route>
             )}
 
             {/* {allRoutes["independent"].map(GetRoute)} */}

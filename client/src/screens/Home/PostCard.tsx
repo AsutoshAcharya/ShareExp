@@ -11,7 +11,7 @@ import { Post } from "./type";
 import UserAvatar from "../../components/UserAvatar";
 import { useApiCall } from "../../hooks";
 import { Post as PostService } from "../../services";
-import useCreds from "../../hooks/useUser";
+import useCreds from "../../hooks/useCreds";
 import { toast } from "react-toastify";
 
 interface Comment {

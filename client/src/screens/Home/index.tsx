@@ -4,14 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 
 import NavBar from "../../components/NavBar";
 import PostCard from "./PostCard";
-import useCreds from "../../hooks/useUser";
+import useCreds from "../../hooks/useCreds";
 import { Post as PostService } from "../../services";
 import { Some } from "../../helpers/Some";
 import { Post } from "./type";
 import { BlurryLoader } from "../../components";
+import { useAuthStore } from "../../store/authStore";
 
 const Home = () => {
   const { user } = useCreds("id", "token");
+  const { logOut } = useAuthStore();
   const [offset, setOffset] = useState(0);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [postData, setPostData] = useState<Array<Post>>([]);
@@ -36,9 +38,12 @@ const Home = () => {
   }
   async function getAllPosts() {
     const resp = await PostService.getAllPost({ ...user, offset });
+    if (resp?.data?.error === "Invalid token" && resp?.status === 500) {
+      logOut();
+    }
     return Some.Array(resp?.data);
   }
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["get-all-posts", user.id, offset],
     queryFn: getAllPosts,
     select: (data) => data.map(toPost),
@@ -51,7 +56,7 @@ const Home = () => {
     refetchOnWindowFocus: false,
     initialData: [] as Array<Post>,
   });
-  console.log(offset);
+
   return (
     <div className="h-screen w-screen">
       <NavBar />
