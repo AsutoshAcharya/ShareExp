@@ -38,6 +38,7 @@ const Home = () => {
   }
   async function getAllPosts() {
     const resp = await PostService.getAllPost({ ...user, offset });
+    // console.log(resp);
     if (resp?.data?.error === "Invalid token" && resp?.status === 500) {
       logOut();
     }
