@@ -283,6 +283,9 @@ export const getCommentsByPostId: RequestHandler<
     if (!post) throw createHttpError(400, "Post not found");
     const allComments = await CommentModel.aggregate([
       {
+        $match: { post_id: new mongoose.Types.ObjectId(postId) },
+      },
+      {
         $lookup: {
           from: "users",
           localField: "user_id",
