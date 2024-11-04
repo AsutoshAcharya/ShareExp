@@ -12,7 +12,7 @@ export default class User {
   }
   static registerUser(values: any) {
     return apiPromise(instance, () =>
-      instance.post(baseUrl + "/register", values.data)
+      instance.post(baseUrl + "/signup", values.data)
     );
   }
 }
