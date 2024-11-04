@@ -4,6 +4,11 @@ import BasicInput from "../../components/BasicInput";
 import { registerData } from "./registerData";
 import { motion } from "framer-motion";
 import { Some } from "../../helpers/Some";
+import { User } from "../../services";
+import { useApiCall } from "../../hooks";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import  RoutesMap  from "../../AppRoutes/RoutesMap";
 
 interface RegisterProps {
   onSignInClick: () => void;
@@ -12,8 +17,37 @@ const country = Object.values(countries).map((item) => item.country);
 
 const Register: FC<RegisterProps> = ({ onSignInClick }) => {
   const [registerState, setRegisterState] = useState(registerData);
-  const [selectedCountry, setSelectedCountry] = useState("India");
-  console.log(country);
+  const [selectedCountry, setSelectedCountry] = useState<string>("India");
+  const navigate = useNavigate();
+  console.log(registerState)
+  const register = useApiCall({
+    fn: User.registerUser,
+    onError: (d) => {
+      // console.log(d);
+      toast.error(d?.data?.error || "Something went wrong");
+    },
+    onSuccess: (resp: any) => {
+       console.log(resp?.data);
+     // addLoginDataToStore(toUser(resp?.data));
+     navigate("/login-or-register" + RoutesMap.LOGIN.path);
+      toast.success("Registration Successful");
+    },
+  });
+  const handleRegister = () => {
+    console.log('function called')
+    register.mutate({
+      data:{
+        user_name:registerState[0].value,
+        email:registerState[1].value,
+        phone:registerState[2].value,
+        password:registerState[3].value,
+        company:registerState[4].value,
+        year_of_experience:registerState[5].value,
+        about:registerState[6].value,
+        country:selectedCountry
+      }
+    })
+  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -23,7 +57,10 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
       <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">
         Register
       </h2>
-      <form className="grid grid-cols-2 gap-2">
+      <form
+        autoComplete="off"
+        className="grid grid-cols-2 gap-2"
+      >
         {registerState.map((state, idx) => {
           return (
             <div key={state.label} className="mb-2">
@@ -42,14 +79,11 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
                     );
                     return updatedState;
                   });
-         
                 }}
                 onBlur={() =>
                   setRegisterState((prev) => {
                     const updatedData = prev.map((p, index) =>
-                      index !== idx
-                        ? p
-                        : { ...p, touched: true }
+                      index !== idx ? p : { ...p, touched: true }
                     );
                     return updatedData;
                   })
@@ -91,6 +125,10 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
               ? Some.String(rd?.validate(rd.value))?.length > 0
               : false
           )}
+          onClick={(e) => {
+            e.preventDefault();
+            handleRegister();
+          }}
         >
           Register
         </motion.button>
