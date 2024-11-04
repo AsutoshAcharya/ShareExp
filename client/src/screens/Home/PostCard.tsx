@@ -28,9 +28,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { user } = useCreds("id", "token");
   const [showComments, setShowComments] = useState(false);
-  const [postComments, setPostComments] = useState<Comment[]>([]);
   const client = useQueryClient();
-
   const avatarBg = uniqolor(post.postedByName).color;
 
   const handleLike = useApiCall({
