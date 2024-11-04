@@ -38,6 +38,7 @@ const Home = () => {
   }
   async function getAllPosts() {
     const resp = await PostService.getAllPost({ ...user, offset });
+    // console.log(resp);
     if (resp?.data?.error === "Invalid token" && resp?.status === 500) {
       logOut();
     }
@@ -61,7 +62,7 @@ const Home = () => {
     <div className="h-screen w-screen">
       <NavBar />
       <div
-        className="flex h-[95%] flex-grow w-dvw p-5 flex-col gap-5 overflow-auto bg-primary"
+        className="flex h-[95%] flex-grow w-dvw p-5 flex-col gap-5 overflow-auto"
         onScroll={(e) => {
           const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
           const diff = scrollHeight - offsetHeight;

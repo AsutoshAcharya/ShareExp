@@ -14,3 +14,14 @@ export type Post = {
   image?: string;
   isLikedByYou: boolean;
 };
+
+export type PostComment = {
+  id: string;
+  postId: string;
+  comment: string;
+  date: Date;
+  commentedBy: string;
+  commentedById: string;
+  country?: string;
+  profilePicture?: string;
+};

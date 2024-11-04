@@ -13,6 +13,7 @@ import { useApiCall } from "../../hooks";
 import { Post as PostService } from "../../services";
 import useCreds from "../../hooks/useCreds";
 import { toast } from "react-toastify";
+import Comment from "./Comment";
 
 interface Comment {
   user: string;
@@ -27,10 +28,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { user } = useCreds("id", "token");
   const [showComments, setShowComments] = useState(false);
-  const [commentInput, setCommentInput] = useState("");
-  const [postComments, setPostComments] = useState<Comment[]>([]);
   const client = useQueryClient();
-
   const avatarBg = uniqolor(post.postedByName).color;
 
   const handleLike = useApiCall({
@@ -44,18 +42,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const toggleComments = () => {
     setShowComments(!showComments);
-  };
-
-  const handleAddComment = () => {
-    if (commentInput.trim()) {
-      const newComment = {
-        user: "Current User", // Replace with the current user's name
-        text: commentInput,
-        date: new Date().toISOString(),
-      };
-      setPostComments([...postComments, newComment]);
-      setCommentInput("");
-    }
   };
 
   return (
@@ -125,7 +111,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             className="btn btn-ghost btn-sm flex items-center space-x-1"
           >
             <FontAwesomeIcon icon={faComment} />
-            <span className="text-sm">{postComments.length}</span>
+            <span className="text-sm">{post.totalComments}</span>
           </button>
           <button className="btn btn-ghost btn-sm flex items-center space-x-1 text-gray-600">
             <FontAwesomeIcon icon={faShare} />
@@ -138,45 +124,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         }`}
       >
         {showComments && (
-          <div className="mt-4 border-t pt-4">
-            <h4 className="text-lg font-semibold text-gray-800 mb-3">
-              Comments
-            </h4>
-            <div className="flex items-center space-x-2 mb-4">
-              <input
-                type="text"
-                className="input input-bordered w-full p-2 rounded-lg shadow-sm text-gray-700"
-                placeholder="Add a comment..."
-                value={commentInput}
-                onChange={(e) => setCommentInput(e.target.value)}
-              />
-              <button
-                onClick={handleAddComment}
-                className="btn btn-primary px-4 py-2 rounded-lg shadow-md text-white bg-blue-500 hover:bg-blue-600 transition-colors duration-200"
-              >
-                Post
-              </button>
-            </div>
-
-            <ul className="space-y-4 max-h-64 overflow-y-auto">
-              {postComments.map((comment, index) => (
-                <li
-                  key={index}
-                  className="bg-white/50 backdrop-blur-md p-3 rounded-lg shadow-sm border border-gray-200"
-                >
-                  <div className="flex items-center mb-2">
-                    <span className="font-medium text-gray-800 mr-2">
-                      {comment.user}
-                    </span>
-                    <span className="text-xs text-gray-400">
-                      {new Date(comment.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-700">{comment.text}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Comment showComments={showComments} postId={post.id} />
         )}
       </div>
     </div>
