@@ -45,7 +45,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="card w-full bg-secondary backdrop-blur-lg shadow-lg rounded-xl overflow-hidden border border-gray-200 transition-transform duration-300 hover:shadow-2xl p-6 flex-shrink-0">
+    <div className="card w-full bg-base-100 shadow-lg rounded-xl overflow-hidden border border-base-300 transition-transform duration-300 hover:shadow-2xl p-6 flex-shrink-0">
       {/* Post Header */}
       <div className="flex items-center mb-4 gap-3">
         <UserAvatar
@@ -55,40 +55,42 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           size={50}
         />
         <div>
-          <h2 className="text-lg font-semibold text-neutral">
+          <h2 className="text-lg font-semibold text-base-content">
             {post?.postedByName}
           </h2>
           {post?.company && (
-            <p className="text-sm text-neutral">{post?.company}</p>
+            <p className="text-sm text-secondary">{post?.company}</p>
           )}
-          <p className="text-xs text-neutral">
+          <p className="text-xs text-secondary">
             Posted on: {post.createdAt.toLocaleDateString()}
           </p>
           {post.updatedAt && (
-            <p className="text-xs text-neutral">
+            <p className="text-xs text-secondary">
               Updated on: {post.updatedAt.toLocaleDateString()}
             </p>
           )}
         </div>
       </div>
 
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">{post.title}</h3>
-      <p className="text-gray-700 mb-4 overflow-hidden text-ellipsis">
+      <h3 className="text-xl font-semibold text-primary mb-2">{post.title}</h3>
+      <p className="text-base-content mb-4 overflow-hidden text-ellipsis">
         {post.body}
       </p>
 
-      {/* {image && (
+      {/* Post Image */}
+      {/* Uncomment and add post.image when available */}
+      {/* {post.image && (
         <figure className="mb-4 rounded-lg overflow-hidden">
           <img
-            src={image}
+            src={post.image}
             alt="Post visual"
-            className="w-full h-64 object-cover rounded-md border border-gray-200"
+            className="w-full h-64 object-cover rounded-md border border-base-300"
           />
         </figure>
       )} */}
 
-      <div className="flex justify-between items-center mt-4 border-t pt-4">
-        <div className="flex items-center space-x-4 text-gray-600">
+      <div className="flex justify-between items-center mt-4 border-t pt-4 border-base-300">
+        <div className="flex items-center space-x-4 text-base-content">
           <button
             onClick={() => {
               handleLike.mutate({
@@ -100,7 +102,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               });
             }}
             className={`btn btn-ghost btn-sm flex items-center space-x-1 ${
-              post.isLikedByYou ? "text-red-500" : "text-gray-600"
+              post.isLikedByYou ? "text-error" : "text-base-content"
             }`}
           >
             <FontAwesomeIcon icon={faHeart} />
@@ -113,7 +115,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <FontAwesomeIcon icon={faComment} />
             <span className="text-sm">{post.totalComments}</span>
           </button>
-          <button className="btn btn-ghost btn-sm flex items-center space-x-1 text-gray-600">
+          <button className="btn btn-ghost btn-sm flex items-center space-x-1 text-base-content">
             <FontAwesomeIcon icon={faShare} />
           </button>
         </div>
