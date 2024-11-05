@@ -1,6 +1,6 @@
 import axios from "axios";
 import apiPromise, { INSTANCE_CONFIG } from "../axiso/apiPromise";
-let instance = axios.create(INSTANCE_CONFIG);
+const instance = axios.create(INSTANCE_CONFIG);
 const baseUrl = `/api/users`;
 
 export default class User {
@@ -12,7 +12,7 @@ export default class User {
   }
   static registerUser(values: any) {
     return apiPromise(instance, () =>
-      instance.post(baseUrl + "/register", values.data)
+      instance.post(baseUrl + "/signup", values.data)
     );
   }
 }
