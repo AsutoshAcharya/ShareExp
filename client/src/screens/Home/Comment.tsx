@@ -8,11 +8,15 @@ import { useApiCall, useCreds } from "../../hooks";
 import { Some } from "../../helpers/Some";
 import clsx from "clsx";
 import { toast } from "react-toastify";
+import moment from "moment-timezone";
+import UserAvatar from "../../components/UserAvatar";
+import uniqolor from "uniqolor";
 
 interface Props {
   showComments: boolean;
   postId: string;
 }
+
 const Comment: FC<Props> = ({ showComments, postId }) => {
   const { user } = useCreds("token", "id");
   const [commentInput, setCommentInput] = useState("");
@@ -28,6 +32,7 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
     },
     onError: () => toast.error("Something went wrong!"),
   });
+
   function toComment(data: any): PostComment {
     return {
       id: Some.String(data?._id),
@@ -40,10 +45,12 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
       profilePicture: Some.String(data?.profile_picture),
     };
   }
+
   async function getAllComments() {
     const resp = await Post.getAllCommentByPostId({ ...user, postId });
     return Some.Array(resp?.data);
   }
+
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["get-all-comments", postId],
     select: (data) => data.map(toComment),
@@ -51,6 +58,7 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
     enabled: Some.Boolean(postId),
     initialData: [],
   });
+
   function handleAdd() {
     const apiData = {
       ...user,
@@ -62,6 +70,7 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
     };
     addComment.mutate(apiData);
   }
+
   return (
     <Fragment>
       {showComments && (
@@ -92,22 +101,35 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
               range(3).map((r) => <CommentSkeleton key={r} />)
             ) : (
               <Fragment>
-                {data.map((comment, index) => (
-                  <li
-                    key={comment.id}
-                    className="bg-white/50 backdrop-blur-md p-3 rounded-lg shadow-sm border border-gray-200"
-                  >
-                    <div className="flex items-center mb-2">
-                      <span className="font-medium text-gray-800 mr-2">
-                        {comment.commentedBy}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {new Date(comment.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-700">{comment.comment}</p>
-                  </li>
-                ))}
+                {data.map((comment) => {
+                  const avatarBg = uniqolor(comment.commentedBy).color;
+                  return (
+                    <li
+                      key={comment.id}
+                      className="bg-white/50 backdrop-blur-md p-3 rounded-lg shadow-sm border border-gray-200"
+                    >
+                      <div className="flex items-center mb-2 gap-2">
+                        <UserAvatar
+                          imageUrl={comment?.profilePicture}
+                          name={comment?.commentedBy}
+                          style={{ backgroundColor: avatarBg }}
+                          size={40}
+                        />
+                        <div>
+                          <span className="font-medium text-gray-800 mr-2">
+                            {comment.commentedBy}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {moment(comment.date)
+                              .tz("Asia/Kolkata")
+                              .format("MMM D, YYYY [at] h:mm A")}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700">{comment.comment}</p>
+                    </li>
+                  );
+                })}
               </Fragment>
             )}
           </ul>
