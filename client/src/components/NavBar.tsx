@@ -1,24 +1,88 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faSignOutAlt, faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import useCreds from "../hooks/useCreds";
 import UserAvatar from "./UserAvatar";
 import RoutesMap from "../AppRoutes/RoutesMap";
 import { useAuthStore } from "../store/authStore";
 import SelectTheme from "./SelectTheme";
+import { motion } from "framer-motion";
 
 const NavBar = () => {
   const { user } = useCreds("token", "id", "profilePicture", "name");
   const navigate = useNavigate();
   const { logOut } = useAuthStore();
 
+  const notificationCount = 1; 
+
   return (
-    <div className="w-full h-[5%] bg-white shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out">
-      <p className="font-extrabold text-2xl text-gray-800 hover:text-gray-600 cursor-pointer">
-        Share Exp
-      </p>
-      <div className="flex items-center space-x-4">
+    <motion.div
+      className="w-full h-[10%] bg-gradient-to-r from-gray-700 via-gray-800 to-black shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex gap-3 items-center h-2">
+        <motion.p
+          className="font-extrabold text-2xl text-white hover:text-gray-300 cursor-pointer"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Share Exp
+        </motion.p>
+
+        <label className="input input-bordered flex items-center gap-2 h-8">
+          <input
+            type="text"
+            className="h-8 px-3 py-2 text-sm rounded-md focus:outline-none"
+            placeholder="Search"
+      
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="h-4 w-4 opacity-70"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </label>
+      </div>
+
+      <div className="flex items-center space-x-6">
         <SelectTheme />
+        
+      
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+          
+        >
+          <button className="btn btn-primary text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2">
+            Create
+          </button>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+          className="relative cursor-pointer"
+        >
+          <FontAwesomeIcon
+            icon={faBell}
+            className="h-6 w-6 text-gray-300 hover:text-yellow-400"
+          />
+          {notificationCount > 0 && (
+            <div className="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1 py-0.5">
+              {notificationCount}
+            </div>
+          )}
+        </motion.div>
+
         {user.token && user.id ? (
           <div className="relative">
             <div className="dropdown dropdown-end">
@@ -32,16 +96,25 @@ const NavBar = () => {
                   name={user.name}
                 />
               </div>
-              <div
+              <motion.div
                 tabIndex={0}
                 className="dropdown-content menu bg-white rounded-lg shadow-lg p-4 z-10 transition-opacity duration-200 ease-in-out w-60 gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
               >
-                <button className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2">
+                <motion.button
+                  className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <FontAwesomeIcon icon={faUser} />
                   <span>Profile</span>
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
                   onClick={() => {
                     logOut();
                     navigate("/" + RoutesMap.LOGIN.path);
@@ -49,20 +122,22 @@ const NavBar = () => {
                 >
                   <FontAwesomeIcon icon={faSignOutAlt} />
                   <span>LogOut</span>
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             </div>
           </div>
         ) : (
-          <button
+          <motion.button
             className="btn btn-primary p-2 rounded-lg transition duration-200 ease-in-out hover:bg-blue-600"
             onClick={() => navigate("/" + RoutesMap.LOGIN.path)}
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.3 }}
           >
             LogIn / Register
-          </button>
+          </motion.button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
