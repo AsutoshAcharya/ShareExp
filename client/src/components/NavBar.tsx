@@ -13,10 +13,28 @@ const NavBar = () => {
   const { logOut } = useAuthStore();
 
   return (
-    <div className="w-full h-[5%] bg-white shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out">
-      <p className="font-extrabold text-2xl text-gray-800 hover:text-gray-600 cursor-pointer">
-        Share Exp
-      </p>
+    <div className="w-full h-[10%] bg-white shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out">
+      <div className="flex gap-3">
+        <p className="font-extrabold text-2xl text-gray-800 hover:text-gray-600 cursor-pointer">
+          Share Exp
+        </p>
+        <label className="input input-bordered flex items-center gap-2">
+          <input type="text" className="h-2" placeholder="Search" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="h-4 w-4 opacity-70"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </label>
+      </div>
+
       <div className="flex items-center space-x-4">
         <SelectTheme />
         {user.token && user.id ? (
