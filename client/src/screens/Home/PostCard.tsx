@@ -27,7 +27,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { user } = useCreds("id", "token");
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
   const client = useQueryClient();
   const avatarBg = uniqolor(post.postedByName).color;
 
@@ -77,20 +77,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         {post.body}
       </p>
 
-      {/* Post Image */}
-      {/* Uncomment and add post.image when available */}
-      {/* {post.image && (
+      {/* {image && (
         <figure className="mb-4 rounded-lg overflow-hidden">
           <img
-            src={post.image}
+            src={image}
             alt="Post visual"
-            className="w-full h-64 object-cover rounded-md border border-base-300"
+            className="w-full h-64 object-cover rounded-md border border-gray-200"
           />
         </figure>
       )} */}
 
-      <div className="flex justify-between items-center mt-4 border-t pt-4 border-base-300">
-        <div className="flex items-center space-x-4 text-base-content">
+      <div className="flex justify-between items-center mt-4 border-t pt-4">
+        <div className="flex items-center space-x-4 text-gray-600">
           <button
             onClick={() => {
               handleLike.mutate({

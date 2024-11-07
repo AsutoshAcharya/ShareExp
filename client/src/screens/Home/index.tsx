@@ -14,8 +14,8 @@ import { useAuthStore } from "../../store/authStore";
 const Home = () => {
   const { user } = useCreds("id", "token");
   const { logOut } = useAuthStore();
-  const [offset, setOffset] = useState(0);
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [offset, setOffset] = useState<number>(0);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
   const [postData, setPostData] = useState<Array<Post>>([]);
 
   function toPost(data: any): Post {
