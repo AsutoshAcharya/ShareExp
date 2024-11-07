@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import countries from "./country.json";
 import BasicInput from "../../components/BasicInput";
 import { registerData } from "./registerData";
@@ -8,7 +8,7 @@ import { User } from "../../services";
 import { useApiCall } from "../../hooks";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import  RoutesMap  from "../../AppRoutes/RoutesMap";
+import RoutesMap from "../../AppRoutes/RoutesMap";
 
 interface RegisterProps {
   onSignInClick: () => void;
@@ -19,35 +19,33 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
   const [registerState, setRegisterState] = useState(registerData);
   const [selectedCountry, setSelectedCountry] = useState<string>("India");
   const navigate = useNavigate();
-  console.log(registerState)
+
   const register = useApiCall({
     fn: User.registerUser,
     onError: (d) => {
-      // console.log(d);
       toast.error(d?.data?.error || "Something went wrong");
     },
     onSuccess: (resp: any) => {
-       console.log(resp?.data);
-     // addLoginDataToStore(toUser(resp?.data));
-     navigate("/login-or-register" + RoutesMap.LOGIN.path);
+      navigate("/login-or-register" + RoutesMap.LOGIN.path);
       toast.success("Registration Successful");
     },
   });
+
   const handleRegister = () => {
-    console.log('function called')
     register.mutate({
-      data:{
-        user_name:registerState[0].value,
-        email:registerState[1].value,
-        phone:registerState[2].value,
-        password:registerState[3].value,
-        company:registerState[4].value,
-        year_of_experience:registerState[5].value,
-        about:registerState[6].value,
-        country:selectedCountry
-      }
-    })
+      data: {
+        user_name: registerState[0].value,
+        email: registerState[1].value,
+        phone: registerState[2].value,
+        password: registerState[3].value,
+        company: registerState[4].value,
+        year_of_experience: registerState[5].value,
+        about: registerState[6].value,
+        country: selectedCountry,
+      },
+    });
   };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -57,11 +55,13 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
       <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">
         Register
       </h2>
-      <form
-        autoComplete="off"
-        className="grid grid-cols-2 gap-2"
-      >
+      <form autoComplete="off" className="grid grid-cols-2 gap-2">
         {registerState.map((state, idx) => {
+          const isTouched = state.touched; // Check if the input was touched
+          const helperText = isTouched && state?.validate
+            ? state?.validate(state.value)
+            : ""; // Show helper text only if the field has been touched
+
           return (
             <div key={state.label} className="mb-2">
               <BasicInput
@@ -71,7 +71,7 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
                 required={state.required}
                 id={state.label}
                 type={state.type}
-                helperText={state?.validate ? state?.validate(state.value) : ""}
+                helperText={helperText}
                 onChange={(e) => {
                   setRegisterState((prev) => {
                     const updatedState = prev.map((data, index) =>
@@ -97,20 +97,18 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
             Country *
           </label>
           <select
-            className=" block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:placeholder-gray-400 dark:text-white"
+            className="block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:placeholder-gray-400 dark:text-white"
             id="country"
             name="country"
             style={{ height: "2.5rem" }}
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
           >
-            {country.map((data, index) => {
-              return (
-                <option key={index} value={data}>
-                  {data}
-                </option>
-              );
-            })}
+            {country.map((data, index) => (
+              <option key={index} value={data}>
+                {data}
+              </option>
+            ))}
           </select>
         </div>
       </form>
@@ -120,10 +118,11 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
           className="mt-8 w-24 text-white bg-blue-700 hover:bg-blue-800 rounded-sm h-10 disabled:cursor-not-allowed disabled:bg-slate-500"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          disabled={registerState.some((rd) =>
-            rd.validate
-              ? Some.String(rd?.validate(rd.value))?.length > 0
-              : false
+          disabled={registerState.some(
+            (rd) =>
+              rd.validate
+                ? Some.String(rd?.validate(rd.value))?.length > 0
+                : false
           )}
           onClick={(e) => {
             e.preventDefault();
