@@ -27,6 +27,7 @@ const NavBar = () => {
           className="font-extrabold text-2xl text-white hover:text-gray-300 cursor-pointer"
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
+          onClick={()=> navigate("/" + RoutesMap.PRIVATE_HOME.path)}
         >
           Share Exp
         </motion.p>
@@ -62,7 +63,9 @@ const NavBar = () => {
           transition={{ duration: 0.3 }}
           
         >
-          <button className="btn btn-primary text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2">
+          <button 
+          onClick={()=> navigate("/" + RoutesMap.CREATE_POST.path)}
+          className="btn btn-primary text-white bg-blue-500 hover:bg-blue-600 rounded-lg px-6 py-2">
             Create
           </button>
         </motion.div>
@@ -109,7 +112,7 @@ const NavBar = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <FontAwesomeIcon icon={faUser} />
-                  <span>Profile</span>
+                  <span onClick={()=> navigate("/" + RoutesMap.PROFILE.path)}>Profile</span>
                 </motion.button>
                 <motion.button
                   className="btn btn-primary hover:bg-gray-200 w-full text-left flex items-center space-x-2"

@@ -27,7 +27,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { user } = useCreds("id", "token");
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
   const client = useQueryClient();
   const avatarBg = uniqolor(post.postedByName).color;
 
@@ -76,17 +76,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <p className="text-gray-700 mb-4 overflow-hidden text-ellipsis">
         {post.body}
       </p>
-
-      {/* {image && (
-        <figure className="mb-4 rounded-lg overflow-hidden">
-          <img
-            src={image}
-            alt="Post visual"
-            className="w-full h-64 object-cover rounded-md border border-gray-200"
-          />
-        </figure>
-      )} */}
-
       <div className="flex justify-between items-center mt-4 border-t pt-4">
         <div className="flex items-center space-x-4 text-gray-600">
           <button
