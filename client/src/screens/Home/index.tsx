@@ -62,9 +62,10 @@ const Home = () => {
     <div className="h-screen w-screen">
       <NavBar />
       <div
-        className="flex h-[95%] flex-grow w-dvw p-5 flex-col gap-5 overflow-auto"
+        className="flex h-[90%] w-dvw p-5 flex-col gap-5 overflow-auto"
         onScroll={(e) => {
           const { scrollTop, scrollHeight, offsetHeight } = e.currentTarget;
+          console.warn(scrollTop);
           const diff = scrollHeight - offsetHeight;
           setIsAtBottom(false);
           if (
