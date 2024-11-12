@@ -29,23 +29,9 @@ async function findErrorInUserBody(
   next: NextFunction
 ) {
   try {
-    const {
-      user_name,
-      email,
-      password: passwordRaw,
-      phone,
-      country,
-      year_of_experience,
-    } = user;
+    const { user_name, email, password: passwordRaw, phone, country } = user;
 
-    if (
-      !user_name ||
-      !phone ||
-      !passwordRaw ||
-      !email ||
-      !country ||
-      !year_of_experience
-    ) {
+    if (!user_name || !phone || !passwordRaw || !email || !country) {
       throw createHttpError(400, "Parameters missing");
     }
 
