@@ -1,12 +1,26 @@
 import { useState, FormEvent, useMemo } from "react";
 import clsx from "clsx";
+import { useApiCall, useCreds } from "../hooks";
+import { Post } from "../services";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 function CreatePostModal() {
+  const { user } = useCreds("token", "id");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const client = useQueryClient();
 
+  const createPost = useApiCall({
+    fn: Post.createPost,
+    onSuccess: () => {
+      toast.success("Post added successfully");
+      client.invalidateQueries(["get-all-posts", user.id]);
+      onClose();
+    },
+  });
   const validateField = (field: string, value: string | File | null) => {
     const newErrors = { ...errors };
     if (field === "title") {
@@ -36,17 +50,28 @@ function CreatePostModal() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (Object.keys(errors).length === 0) {
-      // console.log("Post Published:", { title, content, image });
-
-      setTitle("");
-      setContent("");
-      setImage(null);
-      setErrors({});
+      const apiData = {
+        ...user,
+        data: {
+          posted_by: user.id,
+          title,
+          body: content,
+          // image
+        },
+      };
+      createPost.mutate(apiData);
     }
   };
 
   const hasErrors = useMemo(() => Object.keys(errors).length > 0, [errors]);
 
+  function onClose() {
+    setTitle("");
+    setContent("");
+    setImage(null);
+    setErrors({});
+    document.getElementById("my_modal_1")?.close();
+  }
   return (
     <dialog id="my_modal_1" className="modal">
       <div className="modal-box p-6 bg-white rounded-lg shadow-md transform transition duration-300 scale-95 hover:scale-100">
@@ -104,11 +129,7 @@ function CreatePostModal() {
             )}
           </div>
           <div className="modal-action flex justify-between">
-            <button
-              type="button"
-              className="btn"
-              onClick={() => document.getElementById("my_modal_1")?.close()}
-            >
+            <button type="button" className="btn" onClick={onClose}>
               Close
             </button>
             <button
@@ -116,7 +137,11 @@ function CreatePostModal() {
               className={clsx("btn btn-primary", { "btn-disabled": hasErrors })}
               disabled={hasErrors}
             >
-              Publish Post
+              {createPost.isLoading ? (
+                <span className="loading loading-infinity loading-md"></span>
+              ) : (
+                <>Publish Post</>
+              )}
             </button>
           </div>
         </form>
