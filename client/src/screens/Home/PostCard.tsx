@@ -113,9 +113,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <FontAwesomeIcon icon={faComment} />
             <span className="text-sm">{post.totalComments}</span>
           </button>
-          <button className="btn btn-ghost btn-sm flex items-center space-x-1 text-base-content">
+          {/* <button className="btn btn-ghost btn-sm flex items-center space-x-1 text-base-content">
             <FontAwesomeIcon icon={faShare} />
-          </button>
+          </button> */}
         </div>
       </div>
       <div
