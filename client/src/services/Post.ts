@@ -10,7 +10,7 @@ export default class Post {
       instance.get(baseUrl + `/get-all-posts`, {
         params: {
           limit: 5,
-          offset: values.offset,
+          offset: values.offset || 0,
         },
       })
     );
@@ -69,4 +69,5 @@ export default class Post {
     //     "post_id":"67225a06d0bfc8ebd068a9fc"
     // }
   }
+ 
 }

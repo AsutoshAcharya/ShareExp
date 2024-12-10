@@ -57,7 +57,7 @@ const Register: FC<RegisterProps> = ({ onSignInClick }) => {
       </h2>
       <form autoComplete="off" className="grid grid-cols-2 gap-2">
         {registerState.map((state, idx) => {
-          const isTouched = state.touched; // Check if the input was touched
+          const isTouched = state.touched; // Check if the input was touchednn 
           const helperText = isTouched && state?.validate
             ? state?.validate(state.value)
             : ""; // Show helper text only if the field has been touched

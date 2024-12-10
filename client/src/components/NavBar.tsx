@@ -13,6 +13,7 @@ const NavBar = () => {
   const { user } = useCreds("token", "id", "profilePicture", "name");
   const navigate = useNavigate();
   const { logOut } = useAuthStore();
+
   return (
     <motion.div
       className="w-full h-[10%] bg-gradient-to-r from-gray-700 via-gray-800 to-black shadow-md flex items-center justify-between sticky top-0 z-50 px-6 transition duration-300 ease-in-out"
@@ -25,7 +26,7 @@ const NavBar = () => {
           className="font-extrabold text-2xl text-white hover:text-gray-300 cursor-pointer"
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
-          onClick={() => navigate("/" + RoutesMap.PRIVATE_HOME.path)}
+          onClick={() => navigate("/" + RoutesMap.PRIVATE_HOME.path )}
         >
           Share Exp
         </motion.p>
@@ -92,7 +93,7 @@ const NavBar = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <FontAwesomeIcon icon={faUser} />
-                  <span onClick={() => navigate("/" + RoutesMap.PROFILE.path)}>
+                  <span onClick={() => navigate("/" + RoutesMap.PROFILE.path + `?${user.id}`)}>
                     Profile
                   </span>
                 </motion.button>

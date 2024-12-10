@@ -25,7 +25,7 @@ const Login = () => {
       toast.error(d?.data?.error || "Something went wrong");
     },
     onSuccess: (resp: any) => {
-      // console.log(resp?.data);
+     console.log(resp?.data);
       addLoginDataToStore(toUser(resp?.data));
       navigate("/" + RoutesMap.PRIVATE_HOME.path);
       toast.success("Login Successful");
