@@ -1,12 +1,61 @@
 import { useState } from "react";
+import { User as UserService } from "../../services";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCreds } from "../../hooks";
+import { Some } from "../../helpers/Some";
+import { useQuery } from "@tanstack/react-query";
+
+import { Social, User } from "../../store/types";
+
+
 
 const Profile = () => {
+  const { user } = useCreds("id", "token");
+  const [profileState, setProfileState] = useState([]);
   const [edit, setEdit] = useState<boolean>(false);
+  const id = useLocation();
+  const userId = id.search.split("?");
+function toUser(user:any): Omit<User,"token"> {   return {
+      id: Some.String(user?._id),
+      name: Some.String(user?.user_name),
+      email: Some.String(user?.email),
+      phone: Some.String(user?.phone),
+      country: Some.String(user?.country),
+      yearOfExperience: Some.String(user?.year_of_experience),
+      company: Some.String(user?.company),
+      skills: Some.Array(user?.skills).map((skill) => Some.String(skill)),
+      profilePicture: Some.String(user?.profile_picture),
+      about: Some.String(user?.about),
+      socials: Some.Array(user?.socials).map(
+        (item: any) =>
+          ({
+            type: Some.String(item?.type),
+            link: Some.String(item?.link),
+          } as Social)
+      ),
+    };
+  }
+  async function getUserDetails() {
+    const resp = await UserService.getUserInfo({ ...user });
+    console.log(resp);
+    return Some.Object(resp?.data);
+  }
+  const { data, isLoading } = useQuery({
+    queryKey: ["get-user-info", userId],
+    queryFn: getUserDetails,
+    select: (data) => toUser(data),
+    refetchOnWindowFocus: false,
+  });
+  console.log(data);
+
+  const history = useNavigate();
   return (
     <div className="h-[100vh] w-100% p-6 bg-gray-100">
       <div className="w-100% flex justify-between">
         <div>
           <button
+            onClick={() => history(-1)}
             type="button"
             className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
@@ -35,18 +84,6 @@ const Profile = () => {
           >
             save changes
           </button>
-        </div>
-      </div>
-      <div className="mt-2 w-100% border-2 h-4/5 p-6 flex">
-        <div className="w-1/2">
-          <img
-            src="../../../public/vite.svg"
-            alt="profile pic"
-            className="rounded-full border-2"
-          />
-        </div>
-        <div className="w-1/2">
-          jjgh
         </div>
       </div>
     </div>

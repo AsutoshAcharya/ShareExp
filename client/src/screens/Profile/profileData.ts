@@ -1,6 +1,7 @@
-import { validateEmail, validatePassword } from "../../helpers/regex";
-import { validateName, validatePhoneNumber } from "./RegisterRegex";
-export const registerData: Array<{
+import { validateEmail } from "../../helpers/regex";
+import { validateName, validatePhoneNumber } from "../Register/RegisterRegex";
+
+export const profileData: Array<{
   label: string;
   value: string;
   placeHolder: string;
@@ -51,20 +52,6 @@ export const registerData: Array<{
     },
   },
   {
-    label: "password",
-    value: "",
-    placeHolder: "••••••••",
-    required: true,
-    type: "password",
-    touched: false,
-    validate: (val: string) => {
-      if (!validatePassword(val)) {
-        return "Please enter a valid password. The password must be 8 character long with a Capital Alphabet and a special character.";
-      }
-      return undefined;
-    },
-  },
-  {
     label: "company",
     value: "",
     placeHolder: "company name",
@@ -88,11 +75,6 @@ export const registerData: Array<{
     type: "text",
     required: false,
     touched: false,
-    // validate: (val: string) => {
-    //   if (val.length < 25) {
-    //     return "Please add about yourself";
-    //   }
-    //   return undefined;
-    // }
+
   },
 ];

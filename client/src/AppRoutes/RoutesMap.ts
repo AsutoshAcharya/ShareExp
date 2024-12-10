@@ -26,7 +26,9 @@ class RoutesMap {
   static PROFILE: AppRoute = {
     title: "profile",
     path: "profile",
-    subRoutes: {},
+    subRoutes: {
+      
+    },
     Element: Profile,
     kind: "private",
   }
