@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 //icons imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faComment, faShare } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 
 //local imports
 import { Post } from "./type";
@@ -14,6 +14,8 @@ import { Post as PostService } from "../../services";
 import useCreds from "../../hooks/useCreds";
 import { toast } from "react-toastify";
 import Comment from "./Comment";
+import { useNavigate } from "react-router-dom";
+import RoutesMap from "../../AppRoutes/RoutesMap";
 
 interface Comment {
   user: string;
@@ -30,6 +32,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [showComments, setShowComments] = useState<boolean>(false);
   const client = useQueryClient();
   const avatarBg = uniqolor(post.postedByName).color;
+  const navigate = useNavigate();
 
   const handleLike = useApiCall({
     fn: post.isLikedByYou ? PostService.dislikePost : PostService.likePost,
@@ -53,6 +56,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           name={post?.postedByName}
           style={{ backgroundColor: avatarBg }}
           size={50}
+          onClick={() =>
+            navigate("/" + RoutesMap.PROFILE.path + "?" + post.postedById)
+          }
         />
         <div>
           <h2 className="text-lg font-semibold text-base-content">

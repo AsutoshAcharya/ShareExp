@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import moment from "moment-timezone";
 import UserAvatar from "../../components/UserAvatar";
 import uniqolor from "uniqolor";
+import { useNavigate } from "react-router-dom";
+import RoutesMap from "../../AppRoutes/RoutesMap";
 
 interface Props {
   showComments: boolean;
@@ -21,6 +23,7 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
   const { user } = useCreds("token", "id");
   const [commentInput, setCommentInput] = useState("");
   const client = useQueryClient();
+  const navigate = useNavigate();
 
   const addComment = useApiCall({
     fn: Post.addComment,
@@ -114,6 +117,14 @@ const Comment: FC<Props> = ({ showComments, postId }) => {
                           name={comment?.commentedBy}
                           style={{ backgroundColor: avatarBg }}
                           size={40}
+                          onClick={() =>
+                            navigate(
+                              "/" +
+                                RoutesMap.PROFILE.path +
+                                "?" +
+                                comment.commentedById
+                            )
+                          }
                         />
                         <div>
                           <span className="font-medium text-gray-800 mr-2">

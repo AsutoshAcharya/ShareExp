@@ -18,6 +18,13 @@ export default class User {
   static getUserInfo(values: any) {
     setHeaders(instance, values.token, values.id);
     return apiPromise(instance, () =>
-      instance.get(baseUrl + `/get-user-info/${values.id}`));
+      instance.get(baseUrl + `/get-user-info/${values.id}`)
+    );
+  }
+  static editUser(values: any) {
+    setHeaders(instance, values.token, values.id);
+    return apiPromise(instance, () =>
+      instance.post(baseUrl + "/edit-user/" + values.userId, values.data)
+    );
   }
 }

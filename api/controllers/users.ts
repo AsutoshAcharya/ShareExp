@@ -131,7 +131,7 @@ export const logIn: RequestHandler<
       { userId: user._id, role: user.role },
       process.env.jwt!,
       {
-        expiresIn: "1h",
+        expiresIn: "10d",
       }
     );
     const { password: pw, ...userData } = user.toObject();
