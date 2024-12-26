@@ -18,45 +18,45 @@ const Home = () => {
   const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
   const [postData, setPostData] = useState<Array<Post>>([]);
 
-  function toPost(data: any): Post {
-    return {
-      id: Some.String(data?._id),
-      title: Some.String(data?.title),
+  function toPost(data: any): Post { 
+    return { 
+      id: Some.String(data?._id), 
+      title: Some.String(data?.title), 
       body: Some.String(data?.body),
-      postedById: Some.String(data?.posted_by),
-      totalLikes: Some.Number(data?.total_likes),
-      totalComments: Some.Number(data?.total_comments),
-      createdAt: Some.Date(data?.createdAt),
-      updatedAt: Some.Date(data?.updatedAt),
-      postedByName: Some.String(data?.created_by),
-      country: Some.String(data?.country),
-      company: Some.String(data?.company),
-      profilePicture: Some.String(data?.profile_picture),
-      image: Some.String(data?.image),
-      isLikedByYou: Some.Boolean(data?.isLikedByYou),
+      postedById: Some.String(data?.posted_by), 
+      totalLikes: Some.Number(data?.total_likes), 
+      totalComments: Some.Number(data?.total_comments), 
+      createdAt: Some.Date(data?.createdAt), 
+      updatedAt: Some.Date(data?.updatedAt), 
+      postedByName: Some.String(data?.created_by), 
+      country: Some.String(data?.country), 
+      company: Some.String(data?.company), 
+      profilePicture: Some.String(data?.profile_picture), 
+      image: Some.String(data?.image), 
+      isLikedByYou: Some.Boolean(data?.isLikedByYou), 
     };
-  }
+  } 
   
-  async function getAllPosts() {
-    const resp = await PostService.getAllPost({ ...user, offset });
-     console.log(resp);
-    if (resp?.data?.error === "Invalid token" && resp?.status === 500) {
-      logOut();
-    }
-    return Some.Array(resp?.data);
-  }
-  const { data, isLoading } = useQuery({
-    queryKey: ["get-all-posts", user.id, offset],
-    queryFn: getAllPosts,
-    select: (data) => data.map(toPost),
-    onSuccess: (data) => {
-      if (isAtBottom) setPostData((prev) => [...prev, ...data]);
-      else {
-        setPostData(data);
-      }
+  async function getAllPosts() { 
+    const resp = await PostService.getAllPost({ ...user, offset }); 
+     console.log(resp); 
+    if (resp?.data?.error === "Invalid token" && resp?.status === 500) { 
+      logOut(); 
+    } 
+    return Some.Array(resp?.data); 
+  } 
+  const { data, isLoading } = useQuery({ 
+    queryKey: ["get-all-posts", user.id, offset], 
+    queryFn: getAllPosts, 
+    select: (data) => data.map(toPost), 
+    onSuccess: (data) => { 
+      if (isAtBottom) setPostData((prev) => [...prev, ...data]); 
+      else { 
+        setPostData(data); 
+      } 
     },
-    refetchOnWindowFocus: false,
-    initialData: [] as Array<Post>,
+    refetchOnWindowFocus: false, 
+    initialData: [] as Array<Post>, 
   });
   return (
     <div className="h-screen w-screen">
